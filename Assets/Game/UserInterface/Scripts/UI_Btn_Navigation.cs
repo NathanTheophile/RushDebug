@@ -17,7 +17,7 @@ public class UI_Btn_Navigation : MonoBehaviour
 
     [Header("Navigation")]
     [SerializeField] private BtnTransitions _BtnType;
-    [SerializeField] private bool _LevelUnloader, _Retry;
+    [SerializeField] private bool _LevelUnloader, _Retry, _StartGame;
     
     #endregion
 
@@ -53,6 +53,7 @@ public class UI_Btn_Navigation : MonoBehaviour
 
         if (_Retry) _Button.onClick.AddListener(Retry);
         if (_LevelUnloader) _Button.onClick.AddListener(UnloadLevel);
+        if (_StartGame) _Button.onClick.AddListener(Play);
     }
 
     #endregion
@@ -68,6 +69,8 @@ public class UI_Btn_Navigation : MonoBehaviour
     void QuitGame()         => Application.Quit();
 
     void UnloadLevel()      => Manager_Game.Instance.UnloadCurrentLevel();
+
+    void Play() => Manager_Game.Instance.StartGame();
 
     void Retry() => Manager_Game.Instance.Retry();
 

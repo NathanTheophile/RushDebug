@@ -38,7 +38,6 @@ namespace Rush.Game
 
         public event Action onCubeValidation;
 
-
         void Awake()
         {
             _Material = _ColorSO.Material;

@@ -188,6 +188,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3260880925716991860, guid: 90f6dcf512709cf429798acfdbcc3ff8, type: 3}
+      propertyPath: _StartGame
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3260880925716991860, guid: 90f6dcf512709cf429798acfdbcc3ff8, type: 3}
       propertyPath: _CardToHide
       value: 
       objectReference: {fileID: 5411068302536572238}

@@ -18,6 +18,8 @@ namespace Rush.Game
         
         [SerializeField] private SO_Colors _ColorSO;   
                 [SerializeField] GameObject tomb;
+                                [SerializeField] GameObject bone;
+
 [SerializeField] Material _CubeMaterial;
         Manager_Time timeManager;
         Manager_Tile tileManager;
@@ -53,6 +55,7 @@ namespace Rush.Game
             tombM[0] = _Material;
             tombM[1] = _Emissive;
             tombR.materials = tombM;
+            bone.GetComponent<Renderer>().material = _Emissive;
         }
 
         protected override void Start()
@@ -63,16 +66,20 @@ namespace Rush.Game
             gameManager = Manager_Game.Instance;
             _CurrentWaitStatus = _TickBetweenSpawns;
             gameManager.onGameRetry += ResetSpawner;
+            gameManager.onGameStart += StartGame;
             gameManager?.UpdateCubesAmountoComplete(_AmountoOfCubes);
-            BeginSpawning();
+            timeManager.onTickFinished += Countdown;
         }
 
         void ResetSpawner()
         {
+                        _Spawning = false;
+
             _CurrentWaitStatus = _StartDelay;
             _CurrentCubeSpawned = 0;
             foreach (var cube in _SpawnerBabies) Destroy(cube.gameObject);
             _SpawnerBabies.Clear();
+                        bone.SetActive(true);
         }
 
         void SpawnCube()
@@ -91,11 +98,9 @@ namespace Rush.Game
             if (_CurrentCubeSpawned >= _AmountoOfCubes) StopSpawning();
         }
 
-        private void BeginSpawning()
+        void StartGame()
         {
-            if (timeManager == null || _Spawning || _CurrentCubeSpawned >= _AmountoOfCubes) return;
-
-            timeManager.onTickFinished += Countdown;
+            bone.SetActive(false);
             _Spawning = true;
         }
 
@@ -106,8 +111,10 @@ namespace Rush.Game
             _CurrentWaitStatus --;
             if (_CurrentWaitStatus <= 0)
             {
+                if (_Spawning) SpawnCube();
+
                 _CurrentWaitStatus = _TickBetweenSpawns;
-                SpawnCube();
+
             }
         }
 
@@ -116,8 +123,6 @@ namespace Rush.Game
                         if (timeManager == null) return;
 
             timeManager.onTickFinished -= Countdown;
-
-            _Spawning = false;
         }
 
         private void PlaySpawnTween(Transform pCubeTransform)

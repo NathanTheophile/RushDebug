@@ -7,7 +7,8 @@ public class AmbiantSounds : MonoBehaviour
 {
     [SerializeField] List<AudioClip> audioClips= new List<AudioClip>();
     [SerializeField] float minLength, maxLength;
-
+    [SerializeField] string Bus;
+    [SerializeField, Range(0f, 1f)] float volume = 1f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,13 +18,18 @@ public class AmbiantSounds : MonoBehaviour
 
     IEnumerator PlaySound()
     {
-        float delay = Random.Range(minLength, maxLength);
-        AudioClip lClip = audioClips[Random.Range(0, audioClips.Count)];
-                Debug.Log("Je joue " + lClip.name);
+        if (audioClips == null || audioClips.Count == 0)
+            yield break;
 
-        Vector3 lPosition = new Vector3(Random.Range(-50, 50), 5, Random.Range(-50, 50));
-        Manager_Audio.Instance.PlayAtPosition(lClip, lPosition, pMixerGroup:"Ambiant");
-        yield return new WaitForSeconds(delay);
+        while (true)
+        {
+            float lDelay = Mathf.Max(0f, Random.Range(minLength, maxLength));
+            AudioClip lClip = audioClips[Random.Range(0, audioClips.Count)];
+
+            Vector3 lPosition = new Vector3(Random.Range(-50, 50), 5, Random.Range(-50, 50));
+            Manager_Audio.Instance.PlayAtPosition(lClip, pPosition:lPosition, pMixerGroup:Bus, pVolume:volume);
+            yield return new WaitForSeconds(lDelay);
+        }
     }
 
     // Update is called once per frame

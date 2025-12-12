@@ -35,9 +35,9 @@ namespace Rush.Game
         private bool _HasTriggeredGameWon;
         [SerializeField] private TilePlacer _TilePlacer;
         private List<SO_LevelData.InventoryTile> _InventoryAtGameStart;
-
         public event Action onGameOver;
         public event Action onGameWon;
+        public event Action onGameStart;
 
         public event Action onGameRetry;
 
@@ -62,7 +62,6 @@ namespace Rush.Game
 
         public void UpdateCubeArrived()
         {
-            Debug.Log("Cubs to complete" + _CubesToComplete);
             _CubesArrived++;
             if (_CubesArrived >= _CubesToComplete && !_HasTriggeredGameWon)
             {
@@ -119,6 +118,11 @@ namespace Rush.Game
             _CubesToComplete = 0;
             _CubesArrived = 0;
             onGameRetry.Invoke();
+        }
+
+        public void StartGame()
+        {
+            onGameStart.Invoke();
         }
 
         #endregion

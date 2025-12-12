@@ -348,6 +348,9 @@ GameObject:
   m_Component:
   - component: {fileID: 616076347}
   - component: {fileID: 616076348}
+  - component: {fileID: 616076349}
+  - component: {fileID: 616076352}
+  - component: {fileID: 616076353}
   m_Layer: 0
   m_Name: AmbiantSounds
   m_TagString: Untagged
@@ -385,8 +388,57 @@ MonoBehaviour:
   audioClips:
   - {fileID: 8300000, guid: ba3c8ad016ce9054c979690917385093, type: 3}
   - {fileID: 8300000, guid: 4f2ce734572f8b24986722663258697e, type: 3}
-  minLength: 3
-  maxLength: 7
+  - {fileID: 8300000, guid: 1390e1ad56a23434fad0c345e721458c, type: 3}
+  - {fileID: 8300000, guid: b184a3f3f87f8a144ad8b66db5055d7c, type: 3}
+  minLength: 20
+  maxLength: 35
+  Bus: Ambiant
+  volume: 1
+--- !u!114 &616076349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616076346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47b12cd5ae28fc49b189816dc80a4f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioClip: {fileID: 8300000, guid: f3394f30d39be51488993615d42c48e1, type: 3}
+  Bus: Music
+  volume: 0.35
+--- !u!114 &616076352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616076346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47b12cd5ae28fc49b189816dc80a4f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioClip: {fileID: 8300000, guid: 42feb07a822a3fc4fa567b97a1b1079e, type: 3}
+  Bus: Ambiant
+  volume: 0.15
+--- !u!114 &616076353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616076346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47b12cd5ae28fc49b189816dc80a4f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioClip: {fileID: 8300000, guid: 5cd267234ab02f440afa3b8f4d66225a, type: 3}
+  Bus: Ambiant
+  volume: 0.1
 --- !u!1 &812283351
 GameObject:
   m_ObjectHideFlags: 0

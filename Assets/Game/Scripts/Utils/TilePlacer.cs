@@ -51,10 +51,11 @@ public class TilePlacer : MonoBehaviour
 
     [Header("Physics")]
     [SerializeField] private float _RaycastDistance = 20f;
-        private Vector3 _LastGroundNormal = Vector3.up;
+    private Vector3 _LastGroundNormal = Vector3.up;
 
     [SerializeField] private float _PreviewHoverDistance = 20f;
     [SerializeField] private float _GroundCheckRadius = 0.4f;
+    [SerializeField] private float _PlacedTileHoverYOffset = 0.25f;
     [SerializeField] private float _GroundHitYOffset = 0.25f;
     [SerializeField] private LayerMask _GroundLayer, _UiLayer, _TilesLayer;
 
@@ -64,9 +65,10 @@ public class TilePlacer : MonoBehaviour
     private bool _HasGroundHit;
     private Vector3 _InstantiatePos;
     private Quaternion _TileRotation = Quaternion.identity;
-    private readonly List<Transform> _PlacedTiles = new();
+    private readonly Dictionary<Transform, Transform> _PlacedTiles = new();
     private Transform _CurrentDisabledGround;
-    private readonly Dictionary<Transform, Transform> _DisabledGroundsByTile = new();
+        private Transform _CurrentRaisedTile;
+
     public static Transform previewTile;
     public event Action OnTilePlaced;
     public bool HandlingTile { get; private set; }
@@ -85,11 +87,13 @@ public class TilePlacer : MonoBehaviour
 
     private void Update()
     {
+
         if (Input.GetMouseButtonDown(1))
         {
             if (TryRemoveTileUnderCursor()) return;
 
             if (!HandlingTile) return;
+            RestoreCurrentHitGround();
 
             if (previewTile != null)
             {
@@ -101,7 +105,15 @@ public class TilePlacer : MonoBehaviour
             return;
         }
 
-        if (!HandlingTile) return;
+        if (!HandlingTile)
+        {
+            HandlePlacedTileHover();
+
+            if (Input.GetMouseButtonUp(0))
+                TryPickUpTileUnderCursor();
+            
+            return;
+        }
 
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
@@ -125,12 +137,14 @@ public class TilePlacer : MonoBehaviour
                 if (lUpDot > 0.9f)
                 {
                     Vector3 lOffsetPoint = lHitObject.point + lHitObject.normal * 0.5f;
+                    SetCurrentHitGround(lHitObject.transform);
 
                     previewTile.position = Vector3Int.RoundToInt(lOffsetPoint);
                     _HasGroundHit = true;
                 }
                 else
-                {
+                {                    RestoreCurrentHitGround();
+
                     previewTile.position = _InstantiatePos;
                 }
             }
@@ -151,7 +165,9 @@ public class TilePlacer : MonoBehaviour
 
             if (lArrowComponent != null)
                 lArrowComponent.PlayPlacementAnimation();
-            _PlacedTiles.Add(lNewTile);
+            if (_CurrentDisabledGround != null)
+                _PlacedTiles[lNewTile] = _CurrentDisabledGround;
+            DetachCurrentHitGround();
             Destroy(previewTile.gameObject);
             previewTile = null;
             HandlingTile = false;
@@ -234,12 +250,15 @@ public class TilePlacer : MonoBehaviour
 
         if (previewTile != null)
             previewTile.position = _InstantiatePos;
+
+                RestoreCurrentHitGround();
     }
 
     public void ResetPlacedTiles()
     {
-        foreach (Transform lTile in _PlacedTiles)
+        foreach (KeyValuePair<Transform, Transform> lPlacedTile in _PlacedTiles)
         {
+            Transform lTile = lPlacedTile.Key;
             if (lTile == null) continue;
 
             Tile lTileComponent = lTile.GetComponentInChildren<Tile>();
@@ -253,6 +272,11 @@ public class TilePlacer : MonoBehaviour
 
             Vector3 lTilePosition = lTile.position;
             Destroy(lTile.gameObject);
+        }
+
+        foreach (Transform lGround in _PlacedTiles.Values)
+        {
+            EnableChild(lGround);
         }
 
         _PlacedTiles.Clear();
@@ -288,12 +312,60 @@ public class TilePlacer : MonoBehaviour
 
         if (lInventoryTile != null)
             lInventoryTile.AddTileBack();
-
+        if (_PlacedTiles.TryGetValue(lTile.transform, out Transform lGround))
+        {
+            EnableChild(lGround);
+        }
         _PlacedTiles.Remove(lTile.transform);
         Destroy(lTile.gameObject);
 
         return true;
     }
+
+    private void TryPickUpTileUnderCursor()
+    {
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+
+        Ray lRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (!Physics.Raycast(lRay, out RaycastHit lHit, _RaycastDistance, _TilesLayer))
+            return;
+
+        if (previewTile != null && (lHit.transform == previewTile || lHit.transform.IsChildOf(previewTile)))
+            return;
+
+        Tile lTile = lHit.transform.GetComponentInParent<Tile>();
+
+        if (lTile == null)
+            return;
+
+        if (lTile.tileVariant == Tile.TileVariants.Teleporter
+            || lTile.tileVariant == Tile.TileVariants.Target
+            || lTile.tileVariant == Tile.TileVariants.Spawner)
+            return;
+
+        Tile.TileOrientations lOrientation = GetOrientationFromDirection(lTile.transform.forward);
+
+        UI_Btn_InventoryTile lInventoryTile = UI_Btn_InventoryTile.FindMatchingTile(lTile.tileVariant, lOrientation);
+
+        bool lWasPlacedFromInventory = _PlacedTiles.TryGetValue(lTile.transform, out Transform lGround);
+
+        if (lInventoryTile != null)
+        {
+            lInventoryTile.AddTileBack();
+            lInventoryTile.BeginHandlingFromPickup(lWasPlacedFromInventory);
+        }
+
+        if (lWasPlacedFromInventory)
+        {
+            EnableChild(lGround);
+        }
+
+        _PlacedTiles.Remove(lTile.transform);
+
+        Destroy(lTile.gameObject);
+    }
+
 
     private static Tile.TileOrientations GetOrientationFromDirection(Vector3 pDirection)
     {
@@ -371,6 +443,110 @@ public class TilePlacer : MonoBehaviour
         float lDuration = lMain.duration + lMain.startLifetimeMultiplier;
 
         Destroy(lDustInstance.gameObject, lDuration);
+    }
+    #endregion
+
+    #region _____________________________| GROUNDS
+
+    private void SetCurrentHitGround(Transform pGround)
+    {
+        if (_CurrentDisabledGround == pGround) return;
+
+        RestoreCurrentHitGround();
+        DiableChild(pGround);
+        _CurrentDisabledGround = pGround;
+    }
+
+    private void RestoreCurrentHitGround()
+    {
+        if (_CurrentDisabledGround == null) return;
+
+        EnableChild(_CurrentDisabledGround);
+        _CurrentDisabledGround = null;
+    }
+
+    private void DetachCurrentHitGround()
+    {
+        _CurrentDisabledGround = null;
+    }
+
+    private void DiableChild(Transform pGround)
+    {
+        Transform lGroundChild = GetGroundChild(pGround);
+        if (lGroundChild == null) return;
+        lGroundChild.gameObject.SetActive(false);
+    }
+
+    private void EnableChild(Transform pGround)
+    {
+        Transform lGroundChild = GetGroundChild(pGround);
+        if (lGroundChild == null) return;
+
+        lGroundChild.gameObject.SetActive(true);
+    }
+
+    private static Transform GetGroundChild(Transform pGround)
+    {
+        if (pGround == null || pGround.childCount == 0) return null;
+
+        return pGround.GetChild(0);
+    }
+
+    private void HandlePlacedTileHover()
+    {
+        Ray lRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            RestoreHoveredTile();
+            return;
+        }
+
+        if (!Physics.Raycast(lRay, out RaycastHit lHit, _RaycastDistance, _TilesLayer))
+        {
+            RestoreHoveredTile();
+            return;
+        }
+
+        if (previewTile != null && (lHit.transform == previewTile || lHit.transform.IsChildOf(previewTile)))
+        {
+            RestoreHoveredTile();
+            return;
+        }
+
+        Tile lTile = lHit.transform.GetComponentInParent<Tile>();
+        if (lTile.tileVariant == Tile.TileVariants.Spawner || lTile.tileVariant == Tile.TileVariants.Target || lTile.tileVariant == Tile.TileVariants.Teleporter)
+        {
+            RestoreHoveredTile();
+            return;
+        }
+        if (lTile == null)
+        {
+            RestoreHoveredTile();
+            return;
+        }
+
+        RaiseHoveredTile(lTile.transform);
+    }
+
+    private void RaiseHoveredTile(Transform pTile)
+    {
+        if (pTile == null || _CurrentRaisedTile == pTile) return;
+
+        RestoreHoveredTile();
+
+        _CurrentRaisedTile = pTile;
+        _CurrentRaisedTile.position += Vector3.up * _PlacedTileHoverYOffset;
+    }
+
+    private void RestoreHoveredTile(Transform pSpecificTile = null)
+    {
+        if (_CurrentRaisedTile == null) return;
+
+        if (pSpecificTile != null && pSpecificTile != _CurrentRaisedTile) return;
+
+        _CurrentRaisedTile.position -= Vector3.up * _PlacedTileHoverYOffset;
+        _CurrentRaisedTile = null;
     }
     #endregion
 }

@@ -25,6 +25,7 @@ public class UI_Btn_InventoryTile : MonoBehaviour
     [SerializeField] private Transform _PreviewCameraPrefab;
     [SerializeField] private Vector3 _PreviewCameraOffset = new(0f, 1f, -2.5f);
     [SerializeField] private int _PreviewTextureSize = 256;
+    private bool _ShouldChainPlacement = true;
 
     #endregion
 
@@ -94,6 +95,7 @@ public class UI_Btn_InventoryTile : MonoBehaviour
             TilePlacerInstance.OnTilePlaced -= HandleTilePlaced;
             TilePlacerInstance.OnTilePlaced += HandleTilePlaced;
             TilePlacerInstance.StartHandlingTile();
+            _ShouldChainPlacement = true;
 
             TilePlacerInstance.SetTilePrefabs(_InventoryTile.tilePrefab, _InventoryTile.previewPrefab, _InventoryTile.orientation);
         });
@@ -171,6 +173,19 @@ public class UI_Btn_InventoryTile : MonoBehaviour
         if (!_IsSelected) return;
 
         if (!ConsumeTile())
+        {
+            _IsSelected = false;
+
+            if (_CurrentSelectedTile == this) _CurrentSelectedTile = null;
+
+            if (TilePlacerInstance != null) TilePlacerInstance.ClearSelection();
+        }
+        else if (TilePlacerInstance != null && _ShouldChainPlacement)
+        {
+            TilePlacerInstance.StartHandlingTile();
+            TilePlacerInstance.SetTilePrefabs(_InventoryTile.tilePrefab, _InventoryTile.previewPrefab, _InventoryTile.orientation);
+        }
+        else
         {
             _IsSelected = false;
 
@@ -323,6 +338,29 @@ public class UI_Btn_InventoryTile : MonoBehaviour
     }
     private bool MatchesTile(Tile.TileVariants pType, Tile.TileOrientations pOrientation)
         => _InventoryTile.type == pType && _InventoryTile.orientation == pOrientation;
+
+    public void BeginHandlingFromPickup(bool pWasPlacedFromInventory)
+    {
+        if (TilePlacerInstance == null)
+        {
+            Debug.LogWarning("TilePlacer reference missing. Cannot begin handling from pickup.");
+            return;
+        }
+
+        if (_CurrentSelectedTile != null && _CurrentSelectedTile != this)
+            _CurrentSelectedTile._IsSelected = false;
+
+        _CurrentSelectedTile = this;
+        _IsSelected = true;
+        _ShouldChainPlacement = pWasPlacedFromInventory;
+
+        TilePlacerInstance.OnTilePlaced -= HandleTilePlaced;
+        TilePlacerInstance.OnTilePlaced += HandleTilePlaced;
+
+        TilePlacerInstance.StartHandlingTile();
+        TilePlacerInstance.SetTilePrefabs(_InventoryTile.tilePrefab, _InventoryTile.previewPrefab, _InventoryTile.orientation);
+    }
+
 
     #endregion
 

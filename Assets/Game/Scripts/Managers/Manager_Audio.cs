@@ -65,8 +65,6 @@ namespace Rush.Game.Core
             WarmPool(_InitialPoolSize);
             if (_DefaultMixerGroup == null)
                 _DefaultMixerGroup = ResolveMixerGroup(_DefaultMixerGroupName);
-
-            PlayLoop(_DefaultMusic, _DefaultVolume, "Music");
         }
 
         #endregion
@@ -143,6 +141,7 @@ namespace Rush.Game.Core
             lEntry.followTarget = pFollowTarget;
 
             AudioSource lSource = lEntry.source;
+
             lSource.clip = pClip;
             lSource.loop = pLoop || _LoopByDefault;
             lSource.volume = pVolume >= 0f ? pVolume : _DefaultVolume;
@@ -211,12 +210,15 @@ namespace Rush.Game.Core
             if (pStop)
                 pSource.source.Stop();
 
-            pSource.source.clip = null;
             pSource.source.loop = false;
             pSource.source.spatialBlend = 0f;
             pSource.source.pitch = _DefaultPitch;
             pSource.source.volume = _DefaultVolume;
-            pSource.source.time = 0f;
+
+            if (pSource.source.clip != null)
+                pSource.source.time = 0f;
+
+            pSource.source.clip = null;
             pSource.followTarget = null;
             pSource.inUse = false;
         }
