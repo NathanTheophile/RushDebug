@@ -41,7 +41,6 @@ public class TilePlacer : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] private Transform _TileToSpawn;
     [SerializeField] private Transform _TilePreviewPrefab;
-        [SerializeField] private Transform _GroundPrefab;
 
     [Header("Effects")]
     [SerializeField] private ParticleSystem _PlacementDustEffect;
@@ -62,15 +61,12 @@ public class TilePlacer : MonoBehaviour
     #endregion
 
     #region _____________________________/ STATE
-    private Transform _LastGroundHit;
-    private Transform _LoweredGround;
-    private Transform _LoweredGroundMesh;
-    private Vector3 _LoweredGroundOriginalLocalPos;
     private bool _HasGroundHit;
     private Vector3 _InstantiatePos;
     private Quaternion _TileRotation = Quaternion.identity;
     private readonly List<Transform> _PlacedTiles = new();
-
+    private Transform _CurrentDisabledGround;
+    private readonly Dictionary<Transform, Transform> _DisabledGroundsByTile = new();
     public static Transform previewTile;
     public event Action OnTilePlaced;
     public bool HandlingTile { get; private set; }
@@ -94,7 +90,6 @@ public class TilePlacer : MonoBehaviour
             if (TryRemoveTileUnderCursor()) return;
 
             if (!HandlingTile) return;
-            ResetLoweredGround();
 
             if (previewTile != null)
             {
@@ -115,20 +110,16 @@ public class TilePlacer : MonoBehaviour
 
         RaycastHit lHitObject;
         _HasGroundHit = false;
-                Vector3 lHoverPosition = lRay.GetPoint(_PreviewHoverDistance);
-
-
+        Vector3 lHoverPosition = lRay.GetPoint(_PreviewHoverDistance);
+        
         if (previewTile != null)
         {
             if (TryGetPlacementHit(lRay, out lHitObject))
             {
                 if (lHitObject.transform.gameObject.layer == 7) 
                 {
-                                        ResetLoweredGround();
-
                     return;
                 }
-                bool lIsGroundHit = IsInLayerMask(lHitObject.transform, _GroundLayer);
                 float lUpDot = Vector3.Dot(lHitObject.normal, Vector3.up);
 
                 if (lUpDot > 0.9f)
@@ -137,39 +128,20 @@ public class TilePlacer : MonoBehaviour
 
                     previewTile.position = Vector3Int.RoundToInt(lOffsetPoint);
                     _HasGroundHit = true;
-                                        _LastGroundNormal = lHitObject.normal;
-
-                    if (lIsGroundHit)
-                    {
-                        _LastGroundHit = lHitObject.transform;
-                        LowerGround(_LastGroundHit);
-                    }
-                    else
-                    {
-                        ResetLoweredGround();
-                    }
                 }
                 else
                 {
                     previewTile.position = _InstantiatePos;
-                                        ResetLoweredGround();
-
                 }
             }
             else
             {
                 previewTile.position = lHoverPosition;
-                                ResetLoweredGround();
-
             }
         }
 
         if (_TileToSpawn != null && previewTile != null && _HasGroundHit && Input.GetMouseButtonUp(0))
         {
-                        ResetLoweredGround();
-
-                        if (_LastGroundHit != null)
-                Destroy(_LastGroundHit.gameObject);
 
             Transform lNewTile = Instantiate(_TileToSpawn, previewTile.position, _TileRotation);
             Vector3 lLandingPosition = previewTile.position;
@@ -183,7 +155,6 @@ public class TilePlacer : MonoBehaviour
             Destroy(previewTile.gameObject);
             previewTile = null;
             HandlingTile = false;
-            _LastGroundHit = null;
             OnTilePlaced?.Invoke();
         }
     }
@@ -282,8 +253,6 @@ public class TilePlacer : MonoBehaviour
 
             Vector3 lTilePosition = lTile.position;
             Destroy(lTile.gameObject);
-
-            SpawnGroundAt(lTilePosition);
         }
 
         _PlacedTiles.Clear();
@@ -321,10 +290,7 @@ public class TilePlacer : MonoBehaviour
             lInventoryTile.AddTileBack();
 
         _PlacedTiles.Remove(lTile.transform);
-        Vector3 lTilePosition = lTile.transform.position;
         Destroy(lTile.gameObject);
-
-        SpawnGroundAt(lTilePosition);
 
         return true;
     }
@@ -405,52 +371,6 @@ public class TilePlacer : MonoBehaviour
         float lDuration = lMain.duration + lMain.startLifetimeMultiplier;
 
         Destroy(lDustInstance.gameObject, lDuration);
-    }
-    private void SpawnGroundAt(Vector3 pPosition)
-    {
-        if (_GroundPrefab == null)
-            return;
-
-        Vector3 lSpawnPosition = Vector3Int.RoundToInt(pPosition) - Vector3Int.up;
-
-        if (Physics.CheckSphere(lSpawnPosition, _GroundCheckRadius, _GroundLayer))
-            return;
-
-        Instantiate(_GroundPrefab, lSpawnPosition, _GroundPrefab.rotation, Manager_Game.Instance._CurrentLevelPrefab.transform);
-    }
-
-    private static bool IsInLayerMask(Transform pTransform, LayerMask pLayerMask) => (pLayerMask.value & (1 << pTransform.gameObject.layer)) != 0;
-    private void LowerGround(Transform pGround)
-    {
-        if (pGround == _LoweredGround)
-            return;
-
-        ResetLoweredGround();
-
-        _LoweredGround = pGround;
-        _LoweredGroundMesh = _LoweredGround.childCount > 0 ? _LoweredGround.GetChild(0) : null;
-
-        if (_LoweredGroundMesh == null)
-        {
-            _LoweredGround = null;
-            return;
-        }
-
-        _LoweredGroundOriginalLocalPos = _LoweredGroundMesh.localPosition;
-        _LoweredGroundMesh.localPosition = _LoweredGroundOriginalLocalPos + Vector3.down * _GroundHitYOffset;
-    }
-
-    private void ResetLoweredGround()
-    {
-        if (_LoweredGround == null)
-            return;
-
-
-        if (_LoweredGroundMesh != null)
-            _LoweredGroundMesh.localPosition = _LoweredGroundOriginalLocalPos;
-
-        _LoweredGround = null;
-        _LoweredGroundMesh = null;
     }
     #endregion
 }
