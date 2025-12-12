@@ -73,13 +73,16 @@ namespace Rush.Game
 
         void ResetSpawner()
         {
-                        _Spawning = false;
+            _Spawning = false;
 
             _CurrentWaitStatus = _StartDelay;
             _CurrentCubeSpawned = 0;
-            foreach (var cube in _SpawnerBabies) Destroy(cube.gameObject);
-            _SpawnerBabies.Clear();
-                        bone.SetActive(true);
+            Debug.Log("BeforeDestroycub. " + _SpawnerBabies.Count);
+            foreach (var cube in _SpawnerBabies) 
+            { Debug.Log("Destroycub");
+            Destroy(cube.gameObject);
+            }_SpawnerBabies.Clear();
+            bone.SetActive(true);
         }
 
         void SpawnCube()
@@ -121,7 +124,7 @@ namespace Rush.Game
         private void StopSpawning()
         {
                         if (timeManager == null) return;
-
+            gameManager.onGameStart -= StartGame;
             timeManager.onTickFinished -= Countdown;
         }
 
