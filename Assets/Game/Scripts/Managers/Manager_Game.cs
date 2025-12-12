@@ -69,7 +69,7 @@ namespace Rush.Game
             }
         }
         
-        public void GameOver()
+        public void GameOver(Cube pCube)
         {
             onGameOver?.Invoke();
 

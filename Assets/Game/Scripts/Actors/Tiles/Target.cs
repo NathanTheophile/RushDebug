@@ -109,6 +109,8 @@ namespace Rush.Game
             timeManager.onTickFinished -= pCube.TickUpdate;
             timeManager.objectsAffectedByTime.Remove(pCube);
             pCube.onTileDetected -= tileManager.TryGetTile;
+                        pCube.onCubeDeath -= gameManager.GameOver;
+
             gameManager.UpdateCubeArrived();
 
             pCube.PlayValidationTween(() => Destroy(pCube.GameObject()));

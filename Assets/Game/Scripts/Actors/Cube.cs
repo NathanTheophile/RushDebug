@@ -69,7 +69,7 @@ namespace Rush.Game
         [SerializeField] private LayerMask _GroundLayer;
         [SerializeField] private LayerMask _TilesLayer;
         public event Action<Cube, RaycastHit> onTileDetected;
-        public event Action onCubeDeath;
+        public event Action<Cube> onCubeDeath;
 
         #endregion
 
@@ -127,7 +127,11 @@ namespace Rush.Game
 
                 else SetModeRoll(_Direction);
             }
-            else onCubeDeath?.Invoke();
+            else 
+            {
+                SetModePause();
+                onCubeDeath?.Invoke(this);
+            }
         }
 
         private bool LookAround()
@@ -183,7 +187,7 @@ namespace Rush.Game
         private void HandleCubeCollision(GameObject other)
         {
             if (other.TryGetComponent(out Cube _)){
-                onCubeDeath?.Invoke();}
+                onCubeDeath?.Invoke(this);}
         }
         
         #endregion
@@ -286,9 +290,11 @@ private void PlaySquashStretch()
     seq.Append(_Self.DOScale(originalScale, duration * 0.5f));
 }
 
+
         public void PlayValidationTween(Action onComplete)
         {
-            GetComponent<Collider>().enabled = false;
+            Debug.Log("Joue anim");
+                        GetComponent<Collider>().enabled = false;
 
             Renderer renderer = GetComponent<Renderer>();
             _ValidationTween?.Kill();

@@ -16588,10 +16588,6 @@ PrefabInstance:
       value: P_TileSpawner (3)
       objectReference: {fileID: 0}
     - target: {fileID: 3235179148387333410, guid: 216a10297a6aa544d90085ba437fafb6, type: 3}
-      propertyPath: bone
-      value: 
-      objectReference: {fileID: 335423199357000069}
-    - target: {fileID: 3235179148387333410, guid: 216a10297a6aa544d90085ba437fafb6, type: 3}
       propertyPath: _ColorSO
       value: 
       objectReference: {fileID: 11400000, guid: d52cf28eda26e3341a74346b24f8f19d, type: 2}
@@ -16604,11 +16600,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 216a10297a6aa544d90085ba437fafb6, type: 3}
---- !u!4 &335423199357000069 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6896800899186711697, guid: 216a10297a6aa544d90085ba437fafb6, type: 3}
-  m_PrefabInstance: {fileID: 6562292763181122836}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5707811115501783723 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1452346592840748991, guid: 216a10297a6aa544d90085ba437fafb6, type: 3}

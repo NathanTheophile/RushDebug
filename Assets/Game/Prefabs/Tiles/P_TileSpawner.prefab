@@ -133,8 +133,7 @@ MonoBehaviour:
   cubePrefab: {fileID: 2526059154965326359, guid: d11d60136d78d134383d4406c21f8cbd, type: 3}
   _ColorSO: {fileID: 0}
   tomb: {fileID: 8201883739927495762}
-  bone: {fileID: 6896800899186711697}
-  parentbone: {fileID: 3512038587033125354}
+  bone: {fileID: 6124204227233187371}
   _CubeMaterial: {fileID: 0}
   _ColorData: 0
   _StartDelay: 0

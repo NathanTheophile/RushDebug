@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using Rush.Game.Core;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Rush.Game.SO_Colors;
 
@@ -19,7 +20,7 @@ namespace Rush.Game
         [SerializeField] private SO_Colors _ColorSO;   
                 [SerializeField] GameObject tomb;
                                 [SerializeField] GameObject bone;
-
+bool _SkipAnimation = false;
 [SerializeField] Material _CubeMaterial;
         Manager_Time timeManager;
         Manager_Tile tileManager;
@@ -35,7 +36,7 @@ namespace Rush.Game
         [SerializeField] private int _AmountoOfCubes = 1;
         private int _CurrentCubeSpawned = 0;
         private bool _Spawning = false;
-
+        bool _DeadCube = true;
         public List<Cube> _SpawnerBabies = new List<Cube>();
 
         [Header("Tween")]
@@ -78,11 +79,19 @@ namespace Rush.Game
             _CurrentWaitStatus = _StartDelay;
             _CurrentCubeSpawned = 0;
             Debug.Log("BeforeDestroycub. " + _SpawnerBabies.Count);
-            foreach (var cube in _SpawnerBabies) 
-            { Debug.Log("Destroycub");
-            Destroy(cube.gameObject);
-            }_SpawnerBabies.Clear();
-            bone.SetActive(true);
+            _DeadCube = false;
+            for (int i = _SpawnerBabies.Count - 1; i >= 0; i--)
+            {
+                Debug.Log("During. " + i);
+
+                HandleCubeValidation(_SpawnerBabies[i]);
+            }
+            _SpawnerBabies.Clear();
+
+            _DeadCube = true;
+            if (bone != null) bone.SetActive(true);
+                        timeManager.onTickFinished += Countdown;
+
         }
 
         void SpawnCube()
@@ -94,6 +103,7 @@ namespace Rush.Game
             timeManager.onTickFinished += lCube.TickUpdate;
             lCube.onTileDetected += tileManager.TryGetTile;
             lCube.onCubeDeath += gameManager.GameOver;
+            lCube.onCubeDeath += HandleCubeValidation;
             lCube.ColorData = _ColorData;
             lCube.SpawnDirection(direction);
             _CurrentCubeSpawned++;
@@ -103,7 +113,7 @@ namespace Rush.Game
 
         void StartGame()
         {
-            bone.SetActive(false);
+            if (bone != null) bone.SetActive(false);
             _Spawning = true;
         }
 
@@ -124,7 +134,6 @@ namespace Rush.Game
         private void StopSpawning()
         {
                         if (timeManager == null) return;
-            gameManager.onGameStart -= StartGame;
             timeManager.onTickFinished -= Countdown;
         }
 
@@ -139,7 +148,7 @@ namespace Rush.Game
             pCubeTransform.localScale = Vector3.zero;
             pCubeTransform.position = lSpawnPosition + Vector3.down;
 
-            Sequence lSequence = DOTween.Sequence();
+            DG.Tweening.Sequence lSequence = DOTween.Sequence();
             lSequence.Join(pCubeTransform
                 .DOMove(lSpawnPosition, lDuration)
                 .SetEase(Ease.OutBack));
@@ -153,19 +162,36 @@ namespace Rush.Game
                 .SetEase(Ease.OutQuint));
         }
 
+        private void HandleCubeValidation(Cube pCube)
+        {
+            Debug.Log("HandleCubeVal");
+            pCube.SetModePause();
+            timeManager.onTickFinished -= pCube.TickUpdate;
+            timeManager.objectsAffectedByTime.Remove(pCube);
+            pCube.onTileDetected -= tileManager.TryGetTile;
+            pCube.onCubeDeath -= gameManager.GameOver;
+            pCube.onCubeDeath -= HandleCubeValidation;
+
+            if (_DeadCube)  _SpawnerBabies.Remove(pCube);
+
+            pCube.PlayValidationTween(() => Destroy(pCube.GameObject()));
+        }
+
         private void OnDestroy()
         {
             StopSpawning();
+            if (gameManager != null)
+            {
+                gameManager.onGameRetry -= ResetSpawner;
+                gameManager.onGameStart -= StartGame;
+            }
+
             if (timeManager == null) return;
 
-            foreach (Cube lCube in _SpawnerBabies)
+for (int i = _SpawnerBabies.Count - 1; i >= 0; i--)
             {
-                if (lCube == null) continue;
-                timeManager.objectsAffectedByTime.Remove(lCube);
-                timeManager.onTickFinished -= lCube.TickUpdate;
-                lCube.onTileDetected -= tileManager.TryGetTile;
-                lCube.onCubeDeath -= gameManager.GameOver;
-                Destroy(lCube.gameObject);
+                _SkipAnimation = true;
+                HandleCubeValidation(_SpawnerBabies[i]);
             }
         }
     }
