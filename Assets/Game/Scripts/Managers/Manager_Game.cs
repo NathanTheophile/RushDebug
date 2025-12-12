@@ -6,7 +6,9 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Rush.Game.Core;
 using UnityEngine;
 
@@ -31,7 +33,7 @@ namespace Rush.Game
 
         #endregion
         [SerializeField, Min(0f)] private float _GameWonDelayInSeconds = 8f;
-
+        private bool _HasTriggeredGameOver;
         private bool _HasTriggeredGameWon;
         [SerializeField] private TilePlacer _TilePlacer;
         private List<SO_LevelData.InventoryTile> _InventoryAtGameStart;
@@ -71,10 +73,25 @@ namespace Rush.Game
         
         public void GameOver(Cube pCube)
         {
+            if (_HasTriggeredGameOver)
+                return;
+
+            StartCoroutine(HandleGameOverSequence(pCube));
+        }
+
+        private IEnumerator HandleGameOverSequence(Cube pCube)
+        {
+            _HasTriggeredGameOver = true;
+
+            Tween lDeathTween = pCube?.GetValidationTween();
+            if (lDeathTween != null && lDeathTween.IsActive())
+                yield return lDeathTween.WaitForCompletion();
+
             onGameOver?.Invoke();
 
             Manager_Time.Instance.SetPauseStatus(true);
         }
+        
         private System.Collections.IEnumerator GameWonAfterDelay()
         {
             _HasTriggeredGameWon = true;
@@ -95,6 +112,7 @@ namespace Rush.Game
             _CubesToComplete = 0;
             _CubesArrived = 0;
             _HasTriggeredGameWon = false;
+                        _HasTriggeredGameOver = false;
             CurrentLevel = pLevelData;
             _CurrentLevelPrefab = Instantiate(CurrentLevel.levelPrefab, Vector3.zero, Quaternion.identity);
         }
@@ -117,6 +135,7 @@ namespace Rush.Game
         {
             _CubesToComplete = 0;
             _CubesArrived = 0;
+                        _HasTriggeredGameOver = false;
             onGameRetry.Invoke();
         }
 

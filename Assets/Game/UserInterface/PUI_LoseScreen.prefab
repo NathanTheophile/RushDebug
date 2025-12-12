@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 7683138153668803029}
   - component: {fileID: 3422702701070501383}
   - component: {fileID: 7141274112607983682}
+  - component: {fileID: 2994748045915114979}
   m_Layer: 5
   m_Name: PUI_LoseScreen
   m_TagString: Untagged
@@ -177,7 +178,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1080, y: 720}
+  m_SizeDelta: {x: 1090, y: 755}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8280189793165589751
 CanvasRenderer:
@@ -200,15 +201,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4188679, g: 0.09629365, b: 0.078241326, a: 0.392}
+  m_Color: {r: 1, g: 0.5415094, b: 0.5415094, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 1784d281ba49451448297927861ff52c, type: 3}
+  m_Type: 2
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -232,8 +233,8 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 50
-    m_Bottom: 50
+    m_Top: 100
+    m_Bottom: 100
   m_ChildAlignment: 4
   m_Spacing: 25
   m_ChildForceExpandWidth: 1
@@ -256,6 +257,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Tweaker: {fileID: 0}
+--- !u!114 &2994748045915114979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6067973608668768502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b3485a803dba094fad4e028c3e1ac04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _StartScale: 0.9
+  _PeakScale: 1.05
+  _Duration: 0.35
 --- !u!1001 &2203151224780198686
 PrefabInstance:
   m_ObjectHideFlags: 0

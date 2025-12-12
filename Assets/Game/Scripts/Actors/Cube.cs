@@ -23,9 +23,10 @@ namespace Rush.Game
         private Action doAction;
 
         public Material Color { get;  private set; }
-
+        public Tween GetValidationTween() => _ValidationTween;
         public ColorsData ColorData;
-
+        [SerializeField] private GameObject _CollisionUIPrefab;
+        [SerializeField] private Vector3 _CollisionUIOffset = Vector3.up;
         [SerializeField] Material _Material;
         [Header("VFX")]
         [SerializeField, Min(0f)] private float _ValidationTweenDuration = 5f;
@@ -130,7 +131,7 @@ namespace Rush.Game
             else 
             {
                 SetModePause();
-                onCubeDeath?.Invoke(this);
+                TriggerCubeDeath();
             }
         }
 
@@ -162,9 +163,9 @@ namespace Rush.Game
         {
             foreach (var lDirection in pCheckingOrder)
             {
-                if (CheckForWall(lDirection)) 
+                if (CheckForWall(lDirection))
                 {
-                                    PlaySquashStretch();
+                    PlaySquashStretch(lDirection);
 
                     continue;
 
@@ -186,8 +187,8 @@ namespace Rush.Game
 
         private void HandleCubeCollision(GameObject other)
         {
-            if (other.TryGetComponent(out Cube _)){
-                onCubeDeath?.Invoke(this);}
+            if (other.TryGetComponent(out Cube _))
+                TriggerCubeDeath();
         }
         
         #endregion
@@ -258,7 +259,20 @@ namespace Rush.Game
         #endregion
 
         #region _________________________| MISC METHODS
+        private void TriggerCubeDeath()
+        {
+            SpawnCollisionUI();
+            Manager_Time.Instance.SetPauseStatus(true);
+            onCubeDeath?.Invoke(this);
+        }
 
+        private void SpawnCollisionUI()
+        {
+            if (_CollisionUIPrefab == null) return;
+
+            Vector3 spawnPosition = _Self.position + _CollisionUIOffset;
+            Instantiate(_CollisionUIPrefab, spawnPosition, Quaternion.identity);
+        }
         private void GetLerpMovement(Vector3 pOrigin, Vector3 pDirection)
         {
             _StartPosition = pOrigin;
@@ -270,25 +284,37 @@ namespace Rush.Game
             Color = pCubeMaterial;
             GetComponentInParent<Renderer>().material = Color;
         }
-private void PlaySquashStretch()
-{
-    // Retrieve latest global tick speed
-    float globalSpeed = Manager_Time.Instance.GlobalTickSpeed; 
-    if (globalSpeed <= 0f) globalSpeed = 1f;
+        private void PlaySquashStretch(Vector3 impactDirection)
+        {
+            // Retrieve latest global tick speed
+            float globalSpeed = Manager_Time.Instance.GlobalTickSpeed;
+            if (globalSpeed <= 0f) globalSpeed = 1f;
 
-    // Base duration from currentTickStep, then scaled by global tick speed
-    float duration = currentTickStep / globalSpeed;
+            // Base duration from currentTickStep, then scaled by global tick speed
+            float duration = currentTickStep / globalSpeed;
 
-    // Kill any existing squash/stretch on this transform
-    _Self.DOKill();
+            // Kill any existing squash/stretch on this transform
+            _Self.DOKill();
 
-    Vector3 originalScale = Vector3.one;
-    Vector3 squashScale = new Vector3(1.2f, 0.7f, 1.2f);
+            Vector3 originalScale = Vector3.one;
 
-    Sequence seq = DOTween.Sequence();
-    seq.Append(_Self.DOScale(squashScale, duration * 0.5f));
-    seq.Append(_Self.DOScale(originalScale, duration * 0.5f));
-}
+            float squashAmount = 0.7f;
+            float stretchAmount = 1.2f;
+
+            Vector3 absDirection = new Vector3(Mathf.Abs(impactDirection.x), Mathf.Abs(impactDirection.y), Mathf.Abs(impactDirection.z));
+            Vector3 squashScale = new Vector3(stretchAmount, stretchAmount, stretchAmount);
+
+            if (absDirection.x > 0f)
+                squashScale.x = squashAmount;
+            if (absDirection.y > 0f)
+                squashScale.y = squashAmount;
+            if (absDirection.z > 0f)
+                squashScale.z = squashAmount;
+
+            Sequence seq = DOTween.Sequence();
+            seq.Append(_Self.DOScale(squashScale, duration * 0.5f));
+            seq.Append(_Self.DOScale(originalScale, duration * 0.5f));
+        }
 
 
         public void PlayValidationTween(Action onComplete)
@@ -300,7 +326,7 @@ private void PlaySquashStretch()
             _ValidationTween?.Kill();
 
             Sequence validationSequence = DOTween.Sequence();
-
+            validationSequence.OnKill(() => _ValidationTween = null);
             Vector3 targetPosition = _Self.position + Vector3.up * _ValidationJumpPower;
 
             if (renderer == null)

@@ -126,6 +126,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transparent: {fileID: 2100000, guid: d43f140f7fa9d2645a2098463e17610b, type: 2}
   ColorData: 0
+  _CollisionUIPrefab: {fileID: 1262135206242728906, guid: a5ee7a2bd5dcbb4459ed77dac52082e2, type: 3}
+  _CollisionUIOffset: {x: 0, y: 1, z: 0}
   _Material: {fileID: 0}
   _ValidationTweenDuration: 5
   _ValidationJumpDuration: 3
