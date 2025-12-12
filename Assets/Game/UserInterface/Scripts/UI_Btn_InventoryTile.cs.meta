@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 8092d047f49ee8e49baf1096044851da
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _TileName: {instanceID: 0}
+  - _TileAmount: {instanceID: 0}
+  - _TileImage: {instanceID: 0}
+  - _PreviewCameraPrefab: {fileID: 1619551653465332647, guid: 0da9d297a11591a4389d7a85b0792036, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

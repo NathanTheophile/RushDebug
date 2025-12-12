@@ -1,0 +1,7 @@
+{
+  "name": "release-tools",
+  "private": true,
+  "devDependencies": {
+    "conventional-changelog-conventionalcommits": "^8.0.0"
+  }
+}
