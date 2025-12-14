@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3649036074903165232, guid: 3d7d0a73fa9e1c543bd391089692d32d, type: 3}
       propertyPath: m_Name
-      value: P_TileTarget
+      value: P_TileTarget_Grass
       objectReference: {fileID: 0}
     - target: {fileID: 3651045646452030442, guid: 3d7d0a73fa9e1c543bd391089692d32d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -52,6 +52,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4335853179039263896, guid: 3d7d0a73fa9e1c543bd391089692d32d, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d93f2d3a433a5504597294102afddd18, type: 2}
+    - target: {fileID: 4335853179039263896, guid: 3d7d0a73fa9e1c543bd391089692d32d, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d93f2d3a433a5504597294102afddd18, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

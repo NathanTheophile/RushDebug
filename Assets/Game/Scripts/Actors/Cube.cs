@@ -21,7 +21,12 @@ namespace Rush.Game
         private Transform _Self;
         private float _GridSize = 1f;
         private Action doAction;
-
+        public enum ValidationTweenType
+        {
+            Normal,
+            Falling,
+            Collision
+        }
         public Material Color { get;  private set; }
         public Tween GetValidationTween() => _ValidationTween;
         public ColorsData ColorData;
@@ -32,7 +37,9 @@ namespace Rush.Game
         [SerializeField, Min(0f)] private float _ValidationTweenDuration = 5f;
         [SerializeField, Min(0f)] private float _ValidationJumpDuration = 2f;
         [SerializeField, Min(0f)] private float _ValidationJumpPower = 2f;
+        private ValidationTweenType _ValidationTweenType = ValidationTweenType.Normal;
         private Tween _ValidationTween;
+        public ValidationTweenType CurrentValidationTweenType => _ValidationTweenType;
         #endregion
 
         #region _________________________/ TIME VALUES
@@ -131,7 +138,7 @@ namespace Rush.Game
             else 
             {
                 SetModePause();
-                TriggerCubeDeath();
+                TriggerCubeDeath(ValidationTweenType.Falling);
             }
         }
 
@@ -188,7 +195,7 @@ namespace Rush.Game
         private void HandleCubeCollision(GameObject other)
         {
             if (other.TryGetComponent(out Cube _))
-                TriggerCubeDeath();
+                TriggerCubeDeath(ValidationTweenType.Collision);
         }
         
         #endregion
@@ -259,8 +266,9 @@ namespace Rush.Game
         #endregion
 
         #region _________________________| MISC METHODS
-        private void TriggerCubeDeath()
+        private void TriggerCubeDeath(ValidationTweenType tweenType)
         {
+            _ValidationTweenType = tweenType;
             SpawnCollisionUI();
             Manager_Time.Instance.SetPauseStatus(true);
             onCubeDeath?.Invoke(this);
@@ -317,7 +325,7 @@ namespace Rush.Game
         }
 
 
-        public void PlayValidationTween(Action onComplete)
+        public void PlayValidationTween(Action onComplete, ValidationTweenType? tweenTypeOverride = null)
         {
             Debug.Log("Joue anim");
                         GetComponent<Collider>().enabled = false;
@@ -325,14 +333,20 @@ namespace Rush.Game
             Renderer renderer = GetComponent<Renderer>();
             _ValidationTween?.Kill();
 
+            _ValidationTweenType = tweenTypeOverride ?? _ValidationTweenType;
+
             Sequence validationSequence = DOTween.Sequence();
             validationSequence.OnKill(() => _ValidationTween = null);
-            Vector3 targetPosition = _Self.position + Vector3.up * _ValidationJumpPower;
+            Vector3 jumpDirection = _ValidationTweenType == ValidationTweenType.Falling ? Vector3.down : Vector3.up;
+            Vector3 targetPosition = _Self.position + jumpDirection * _ValidationJumpPower;
 
             if (renderer == null)
             {
-                validationSequence.Append(_Self.DOMoveY(targetPosition.y, _ValidationJumpDuration));
-                validationSequence.Join(_Self.DORotate(Vector3.zero, _ValidationJumpDuration, RotateMode.Fast));
+                if (_ValidationTweenType != ValidationTweenType.Collision)
+                {
+                    validationSequence.Append(_Self.DOMoveY(targetPosition.y, _ValidationJumpDuration));
+                    validationSequence.Join(_Self.DORotate(Vector3.zero, _ValidationJumpDuration, RotateMode.Fast));
+                }
                 validationSequence.OnComplete(() => onComplete?.Invoke());
                 _ValidationTween = validationSequence;
                 return;
@@ -344,8 +358,11 @@ namespace Rush.Game
             float height = 1f;
             material.SetFloat("_CutoffHeight", height);
 
-            validationSequence.Append(_Self.DOMoveY(targetPosition.y, _ValidationJumpDuration));
-            validationSequence.Join(_Self.DORotate(Vector3.zero, _ValidationJumpDuration, RotateMode.Fast));
+            if (_ValidationTweenType != ValidationTweenType.Collision)
+            {
+                validationSequence.Append(_Self.DOMoveY(targetPosition.y, _ValidationJumpDuration));
+                validationSequence.Join(_Self.DORotate(Vector3.zero, _ValidationJumpDuration, RotateMode.Fast));
+            }
             validationSequence.Join(DOTween.To(() => height, value =>
             {
                 height = value;

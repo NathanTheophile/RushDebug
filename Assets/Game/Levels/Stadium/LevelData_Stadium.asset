@@ -24,8 +24,8 @@ MonoBehaviour:
   - type: 2
     orientation: 3
     quantity: 5
-    tilePrefab: {fileID: 6991855307783069268, guid: 3a7a766a585145d438f783be19afb36d, type: 3}
-    previewPrefab: {fileID: 6991855307783069268, guid: 3a7a766a585145d438f783be19afb36d, type: 3}
+    tilePrefab: {fileID: 1519708505807681995, guid: 12c591d36e437dd4cafa2d34260e583e, type: 3}
+    previewPrefab: {fileID: 1519708505807681995, guid: 12c591d36e437dd4cafa2d34260e583e, type: 3}
   - type: 5
     orientation: 0
     quantity: 6

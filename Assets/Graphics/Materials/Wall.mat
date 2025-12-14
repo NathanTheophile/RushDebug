@@ -137,8 +137,8 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Reversed: 0
-    - _Size: 1.5
-    - _Smoothness: 0.9
+    - _Size: 2.27
+    - _Smoothness: 0.47
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

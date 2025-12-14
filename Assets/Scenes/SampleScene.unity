@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 1424826096}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -567,6 +567,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &1424826096 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 6288762535722391078, guid: 48be72ff49992a94d97d14ea9f89a566, type: 3}
+  m_PrefabInstance: {fileID: 1962416849}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1562365955
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1092,7 +1097,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8509582625888240027, guid: 0da9d297a11591a4389d7a85b0792036, type: 3}
       propertyPath: _MaxRadius
-      value: 30
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 8509582625888240027, guid: 0da9d297a11591a4389d7a85b0792036, type: 3}
       propertyPath: _MinRadius
