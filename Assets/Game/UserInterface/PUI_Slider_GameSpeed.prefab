@@ -307,9 +307,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 5194461618664309084}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 6
+  m_MaxValue: 10
   m_WholeNumbers: 0
-  m_Value: 3
+  m_Value: 10
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -325,7 +325,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82ef3ab1d8351664a8a173333d0c73d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _GameSpeedSlider: {fileID: 0}
 --- !u!1 &9041227339107633359
 GameObject:
   m_ObjectHideFlags: 0

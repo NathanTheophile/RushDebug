@@ -87,7 +87,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &3989021664965098930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,8 +119,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _TweenDuration: 0.45
   _LoopCount: 3
-  _StretchScale: {x: 1.65, y: 0.65, z: 1.65}
-  _SquashScale: {x: 0.8, y: 1.35, z: 0.8}
+  _StretchScale: {x: 1.35, y: 0.65, z: 1.35}
+  _SquashScale: {x: 0.8, y: 1.2, z: 0.8}
   _Ease: 6
 --- !u!1 &6497245330205673809
 GameObject:
