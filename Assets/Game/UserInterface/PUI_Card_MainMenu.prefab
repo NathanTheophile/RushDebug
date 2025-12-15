@@ -69,7 +69,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a9d6949e5fd81e54db0a42b5f8eb471e, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -212,6 +212,7 @@ GameObject:
   - component: {fileID: 6005470360168912588}
   - component: {fileID: 3305746826170958316}
   - component: {fileID: 2722737700386086592}
+  - component: {fileID: 6928093297087658744}
   m_Layer: 5
   m_Name: CameraRender
   m_TagString: Untagged
@@ -236,7 +237,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -64, y: 0}
-  m_SizeDelta: {x: 801.5149, y: 538.1896}
+  m_SizeDelta: {x: 1534.0162, y: 1030.039}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &3305746826170958316
 CanvasRenderer:
@@ -273,6 +274,20 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!114 &6928093297087658744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2133288107611193071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd50c6bfcca647b2abf632b2ccc9f25f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _SourceCamera: {fileID: 2672248569196976987}
+  _Resolution: {x: 1920, y: 1080}
 --- !u!1 &3214841809717736448
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,6 +944,34 @@ PrefabInstance:
     - target: {fileID: 31652253597390653, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
       propertyPath: m_SortingLayer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 32111649518056465, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -86.98981
+      objectReference: {fileID: 0}
+    - target: {fileID: 32111649518056465, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 51.4411
+      objectReference: {fileID: 0}
+    - target: {fileID: 32111649518056465, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -22.353497
+      objectReference: {fileID: 0}
+    - target: {fileID: 32111649518056465, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.76124156
+      objectReference: {fileID: 0}
+    - target: {fileID: 32111649518056465, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.19191204
+      objectReference: {fileID: 0}
+    - target: {fileID: 32111649518056465, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.60062915
+      objectReference: {fileID: 0}
+    - target: {fileID: 32111649518056465, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.15141249
       objectReference: {fileID: 0}
     - target: {fileID: 34873234473478542, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
       propertyPath: m_SortingLayer
@@ -8964,7 +9007,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9078580795599166323, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
       propertyPath: field of view
-      value: 26.231289
+      value: 17.14237
       objectReference: {fileID: 0}
     - target: {fileID: 9078580795599166323, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
       propertyPath: m_TargetTexture
@@ -9165,6 +9208,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
+--- !u!20 &2672248569196976987 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 9078580795599166323, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
+  m_PrefabInstance: {fileID: 6406408713478275112}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6685693112292841979 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 297370336598071763, guid: 3ac39726772be4d429205de79e1d76b4, type: 3}
