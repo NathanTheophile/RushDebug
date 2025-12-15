@@ -46,10 +46,10 @@ namespace Rush.Game
         [SerializeField] private string _WinBus = "SFX";
         public event Action onGameRetry;
         [Header("Win Animation")]
-        [SerializeField, Min(0f)] private float _LevelAscendHeight = 5f;
-        [SerializeField, Min(0f)] private float _LevelAscendDuration = 1.5f;
+        [SerializeField, Min(0f)] private float _LevelAscendHeight = 15f;
+        [SerializeField, Min(0f)] private float _LevelAscendDuration = 3f;
         [SerializeField] private Ease _LevelAscendEase = Ease.OutCubic;
-
+        [SerializeField, Min(0f)] private float _LevelAscendDelayInSeconds = 0f;
         private Tween _CurrentLevelWinTween;
         #region _____________________________/ LEVEL DATA
 
@@ -101,8 +101,13 @@ namespace Rush.Game
         private System.Collections.IEnumerator GameWonAfterDelay()
         {
             _HasTriggeredGameWon = true;
-                        PlayLevelAscendTween();
-                        PlayWinSound();
+            InvokeGameWonSequenceStarted();
+            if (_LevelAscendDelayInSeconds > 0f)
+            {
+                yield return new WaitForSeconds(_LevelAscendDelayInSeconds);
+            }
+            PlayLevelAscendTween();
+            PlayWinSound();
             if (_GameWonDelayInSeconds > 0f)
             {
                 yield return new WaitForSeconds(_GameWonDelayInSeconds);
@@ -161,6 +166,19 @@ namespace Rush.Game
 
             Manager_Audio.Instance.PlayOneShot(_WinClip, pMixerGroup: _WinBus);
         }
+
+        private void InvokeGameWonSequenceStarted()
+        {
+            try
+            {
+                onGameWonSequenceStarted?.Invoke();
+            }
+            catch (Exception lException)
+            {
+                Debug.LogError($"Exception while notifying win sequence start: {lException}");
+            }
+        }
+
                 private Tween PlayLevelAscendTween()
         {
             if (_CurrentLevelPrefab == null)

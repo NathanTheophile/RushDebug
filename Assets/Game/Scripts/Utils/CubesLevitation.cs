@@ -10,24 +10,22 @@ public class ChildrenLevitation : MonoBehaviour
     [SerializeField] private float maxStartDelay = 1f;
     [SerializeField] private Ease levitationEase = Ease.OutBack;
 
-    [Header("Tornado")]
-    [SerializeField] private float tornadoRotationDuration = 4f;
-    [SerializeField] private float tornadoWaveAmplitude = 3f;
-    [SerializeField] private float tornadoWaveFrequency = 1.5f;
-    [SerializeField, Range(0f, 1f)] private float tornadoWaveAmplitudeJitter = 0.35f;
-
+    [Header("Win Ascension")]
+    [SerializeField] private float ascensionHeight = 15f;
+    [SerializeField] private float ascensionDuration = 3f;
+    [SerializeField] private Ease ascensionEase = Ease.OutCubic;
+    private Coroutine _SubscribeRoutine;
     private bool _HasSubscribedToGameEvents;
-    private bool _HasTriggeredTornado;
+    private bool _HasTriggeredAscension;
 
     private void OnEnable()
     {
-        SubscribeToGameEvents(true);
-    }
+        EnsureSubscribed();    }
 
     private void OnDisable()
     {
-        SubscribeToGameEvents(false);
-    }
+        StopSubscribeRoutine();
+        UnsubscribeFromGameEvents();    }
 
     private void Start()
     {
@@ -36,30 +34,41 @@ public class ChildrenLevitation : MonoBehaviour
             StartCoroutine(StartLevitationWithRandomDelay(child));
         }
 
-        SubscribeToGameEvents(true);
-    }
-
-    private void SubscribeToGameEvents(bool pSubscribe)
+        EnsureSubscribed();    }
+    private void EnsureSubscribed()
     {
-        if (Manager_Game.Instance == null)
+        if (_HasSubscribedToGameEvents || _SubscribeRoutine != null)
             return;
 
-        if (pSubscribe)
-        {
-            if (_HasSubscribedToGameEvents)
-                return;
+        _SubscribeRoutine = StartCoroutine(SubscribeWhenManagerReady());
+    }
 
-            Manager_Game.Instance.onGameWon += TriggerTornadoAnimation;
-            _HasSubscribedToGameEvents = true;
-        }
-        else
-        {
-            if (!_HasSubscribedToGameEvents)
-                return;
+        private void StopSubscribeRoutine()
+    {
+        if (_SubscribeRoutine == null)
+            return;
 
-            Manager_Game.Instance.onGameWon -= TriggerTornadoAnimation;
-            _HasSubscribedToGameEvents = false;
-        }
+        StopCoroutine(_SubscribeRoutine);
+        _SubscribeRoutine = null;
+    }
+
+    private IEnumerator SubscribeWhenManagerReady()
+    {
+        while (Manager_Game.Instance == null)
+            yield return null;
+
+        Manager_Game.Instance.onGameWonSequenceStarted += TriggerAscensionAnimation;
+        _HasSubscribedToGameEvents = true;
+        _SubscribeRoutine = null;
+    }
+
+    private void UnsubscribeFromGameEvents()
+    {
+        if (!_HasSubscribedToGameEvents || Manager_Game.Instance == null)
+            return;
+
+        Manager_Game.Instance.onGameWonSequenceStarted -= TriggerAscensionAnimation;
+        _HasSubscribedToGameEvents = false;
     }
 
     private IEnumerator StartLevitationWithRandomDelay(Transform child)
@@ -76,43 +85,27 @@ public class ChildrenLevitation : MonoBehaviour
             .SetLoops(-1, LoopType.Yoyo);
     }
 
-    private void TriggerTornadoAnimation()
+    private void TriggerAscensionAnimation()
     {
-        if (_HasTriggeredTornado)
+        if (_HasTriggeredAscension)
             return;
 
-        _HasTriggeredTornado = true;
+        _HasTriggeredAscension = true;
 
         foreach (Transform child in transform)
         {
             child.DOKill();
-            StartTornadoTween(child);
+            StartCoroutine(StartAscensionAfterDelay(child));
         }
     }
 
-    private void StartTornadoTween(Transform child)
+    private IEnumerator StartAscensionAfterDelay(Transform child)
     {
-        Vector3 initialPosition = child.position;
-        Vector2 flatDirection = new Vector2(initialPosition.x, initialPosition.z);
-        float radius = flatDirection.magnitude;
-        float baseAngleInDegrees = Mathf.Atan2(initialPosition.z, initialPosition.x) * Mathf.Rad2Deg;
-        float baseY = initialPosition.y;
-        float randomPhase = Random.Range(0f, Mathf.PI * 2f);
-        float amplitudeMultiplier = Random.Range(1f - tornadoWaveAmplitudeJitter, 1f + tornadoWaveAmplitudeJitter);
+        float delay = Random.Range(0f, 2f);
+        yield return new WaitForSeconds(delay);
 
-        DOTween.To(() => 0f, angleOffsetDeg =>
-        {
-            float currentAngleDeg = baseAngleInDegrees + angleOffsetDeg;
-            float currentAngleRad = currentAngleDeg * Mathf.Deg2Rad;
-            float normalizedTurn = angleOffsetDeg / 360f;
-            float yOffset = Mathf.Sin(normalizedTurn * Mathf.PI * 2f * tornadoWaveFrequency + randomPhase) * tornadoWaveAmplitude * amplitudeMultiplier;
-
-            child.position = new Vector3(
-                Mathf.Cos(currentAngleRad) * radius,
-                baseY + yOffset,
-                Mathf.Sin(currentAngleRad) * radius);
-        }, 360f, tornadoRotationDuration)
-        .SetEase(Ease.Linear)
-        .SetLoops(-1, LoopType.Restart);
+        Vector3 targetPosition = child.position + Vector3.up * ascensionHeight;
+        child.DOMove(targetPosition, ascensionDuration)
+            .SetEase(ascensionEase);
     }
 }

@@ -4,6 +4,7 @@
 //  Note : MY_CONST, myPublic, m_MyProtected, _MyPrivate, lMyLocal, MyFunc(), pMyParam, onMyEvent, OnMyCallback, MyStruct
 #endregion
 
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Rush.Game.Core;
@@ -18,6 +19,7 @@ public class UI_Btn_Navigation : MonoBehaviour
     [Header("Navigation")]
     [SerializeField] private BtnTransitions _BtnType;
     [SerializeField] private bool _LevelUnloader, _Retry, _StartGame;
+    [SerializeField] private bool _FadeBlack;
     
     #endregion
 
@@ -27,7 +29,7 @@ public class UI_Btn_Navigation : MonoBehaviour
     [SerializeField] private Button _Button;
     [SerializeField] private Transform _CardToShow;
     [SerializeField] private Transform _CardToHide;
-    [SerializeField] private bool _FadeBlack;
+
     #endregion
 
     #region _____________________________| UNITY
@@ -41,25 +43,35 @@ public class UI_Btn_Navigation : MonoBehaviour
         Init();
 
         if (_Button == null) return;
-
-        switch (_BtnType)
-        {
-            case BtnTransitions.Show:   _Button.onClick.AddListener(Show);      break;
-            case BtnTransitions.Hide:   _Button.onClick.AddListener(Hide);      break;
-            case BtnTransitions.Switch: _Button.onClick.AddListener(Switch);    break;
-            case BtnTransitions.Quit:   _Button.onClick.AddListener(QuitGame);  break;
-            default: break;
-        }
-
-        if (_Retry) _Button.onClick.AddListener(Retry);
-        if (_LevelUnloader) _Button.onClick.AddListener(UnloadLevel);
-        if (_StartGame) _Button.onClick.AddListener(Play);
+        _Button.onClick.AddListener(OnClick);
     }
 
     #endregion
 
     #region _____________________________| UI METHODS
-   
+
+    private void OnClick()
+    {
+        switch (_BtnType)
+        {
+            case BtnTransitions.Show:   Show();      break;
+            case BtnTransitions.Hide:   Hide();      break;
+            case BtnTransitions.Switch: Switch();    break;
+            case BtnTransitions.Quit:   QuitGame();  break;
+            default: break;
+        }
+
+        if (ShouldDelayActions())
+            StartCoroutine(ExecuteActionsAfterBlackMidpoint());
+        else
+            ExecuteAdditionalActions();
+    }
+
+    private bool ShouldDelayActions()
+    {
+        return _FadeBlack && (_LevelUnloader || _Retry || _StartGame);
+    }
+
     private void Show()     => Manager_Ui.Instance.Show(_CardToShow, _FadeBlack);
 
     private void Hide()     => Manager_Ui.Instance.Hide(_CardToHide, _FadeBlack);
@@ -67,6 +79,21 @@ public class UI_Btn_Navigation : MonoBehaviour
     private void Switch()   => Manager_Ui.Instance.Switch(_CardToShow, _CardToHide, _FadeBlack);
 
     void QuitGame()         => Application.Quit();
+
+    IEnumerator ExecuteActionsAfterBlackMidpoint()
+    {
+        if (Manager_Ui.Instance != null)
+            yield return Manager_Ui.Instance.WaitForBlackMidpoint();
+
+        ExecuteAdditionalActions();
+    }
+
+    private void ExecuteAdditionalActions()
+    {
+        if (_Retry) Retry();
+        if (_LevelUnloader) UnloadLevel();
+        if (_StartGame) Play();
+    }
 
     void UnloadLevel()      => Manager_Game.Instance.UnloadCurrentLevel();
 
