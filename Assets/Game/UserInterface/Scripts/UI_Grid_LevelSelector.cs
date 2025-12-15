@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using Rush.Game;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Rush.UI
 {
@@ -17,7 +18,7 @@ namespace Rush.UI
         [Header("References")]
         [SerializeField] private SO_LevelCollection _LevelCollection;
         [SerializeField] private UI_Btn_Level _LevelItemPrefab;
-
+        [SerializeField] private GridLayoutGroup _GridLayoutGroup;
         #endregion
 
         #region _____________________________/ PREVIEW
@@ -25,7 +26,7 @@ namespace Rush.UI
         [Header("Preview")]
         [SerializeField] private float _PreviewOffset = 50f;
         [SerializeField] private Vector3 _PreviewOrigin = new Vector3(10000f, 10000f, 10000f);
-
+        [SerializeField] private int _MaxColumns = 3;
         #endregion
 
         #region _____________________________/ MISC
@@ -35,7 +36,12 @@ namespace Rush.UI
         #endregion
 
         #region _____________________________| UNITY
+        private void Awake()
+        {
+            if (_GridLayoutGroup == null) _GridLayoutGroup = GetComponent<GridLayoutGroup>();
 
+            ConfigureGridLayout();
+        }
         private void OnEnable() { 
                         Manager_Camera.Instance?.SetMenuCameraActive();
             TilePlacer.Instance?.ResetPlacedTiles(); Populate();}
@@ -64,7 +70,13 @@ namespace Rush.UI
         #endregion
 
         #region _____________________________| METHODS
+        private void ConfigureGridLayout()
+        {
+            if (_GridLayoutGroup == null) return;
 
+            _GridLayoutGroup.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            _GridLayoutGroup.constraintCount = Mathf.Max(1, _MaxColumns);
+        }
         private void Populate()
         {
             var lLevelCollection = _LevelCollection.levelDatas;

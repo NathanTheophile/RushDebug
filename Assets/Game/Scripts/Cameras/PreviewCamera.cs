@@ -42,6 +42,11 @@ namespace Rush.Game
 
         public void AddTargetWorldOffset(Vector3 pWorldOffset) => _TargetPosition += pWorldOffset;
 
+        public void SetRadius(float pRadius)
+        {
+            _Radius = pRadius;
+            UpdateCameraPosition();
+        }
         void UpdateCameraPosition()
         {
             float lPhi = Mathf.Deg2Rad * _Colatitude;

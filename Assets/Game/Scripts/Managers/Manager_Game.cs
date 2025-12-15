@@ -32,7 +32,7 @@ namespace Rush.Game
         }
 
         #endregion
-        [SerializeField, Min(0f)] private float _GameWonDelayInSeconds = 8f;
+        [SerializeField, Min(0f)] private float _GameWonDelayInSeconds = 5f;
         private bool _HasTriggeredGameOver;
         private bool _HasTriggeredGameWon;
         [SerializeField] private TilePlacer _TilePlacer;
@@ -45,7 +45,12 @@ namespace Rush.Game
         [SerializeField] private AudioClip _WinClip;
         [SerializeField] private string _WinBus = "SFX";
         public event Action onGameRetry;
+        [Header("Win Animation")]
+        [SerializeField, Min(0f)] private float _LevelAscendHeight = 5f;
+        [SerializeField, Min(0f)] private float _LevelAscendDuration = 1.5f;
+        [SerializeField] private Ease _LevelAscendEase = Ease.OutCubic;
 
+        private Tween _CurrentLevelWinTween;
         #region _____________________________/ LEVEL DATA
 
         public SO_LevelData CurrentLevel { get; private set; }
@@ -85,12 +90,10 @@ namespace Rush.Game
         private IEnumerator HandleGameOverSequence(Cube pCube)
         {
             _HasTriggeredGameOver = true;
-
+            onGameOver?.Invoke();
             Tween lDeathTween = pCube?.GetValidationTween();
             if (lDeathTween != null && lDeathTween.IsActive())
                 yield return lDeathTween.WaitForCompletion();
-
-            onGameOver?.Invoke();
 
             Manager_Time.Instance.SetPauseStatus(true);
         }
@@ -98,11 +101,12 @@ namespace Rush.Game
         private System.Collections.IEnumerator GameWonAfterDelay()
         {
             _HasTriggeredGameWon = true;
+                        PlayLevelAscendTween();
+                        PlayWinSound();
             if (_GameWonDelayInSeconds > 0f)
             {
                 yield return new WaitForSeconds(_GameWonDelayInSeconds);
             }
-            PlayWinSound();
             onGameWon?.Invoke();
             Manager_Time.Instance.SetPauseStatus(true);
         }
@@ -131,6 +135,8 @@ namespace Rush.Game
 
         public void UnloadCurrentLevel(bool pReload = false)
         {
+                        _CurrentLevelWinTween?.Kill();
+            _CurrentLevelWinTween = null;
             Destroy(_CurrentLevelPrefab);
         }
 
@@ -138,7 +144,9 @@ namespace Rush.Game
         {
             _CubesToComplete = 0;
             _CubesArrived = 0;
-                        _HasTriggeredGameOver = false;
+            _HasTriggeredGameOver = false;
+            _CurrentLevelWinTween?.Kill();
+            _CurrentLevelWinTween = null;
             onGameRetry.Invoke();
         }
 
@@ -152,6 +160,19 @@ namespace Rush.Game
                 return;
 
             Manager_Audio.Instance.PlayOneShot(_WinClip, pMixerGroup: _WinBus);
+        }
+                private Tween PlayLevelAscendTween()
+        {
+            if (_CurrentLevelPrefab == null)
+                return null;
+
+            Transform lLevelTransform = _CurrentLevelPrefab.transform;
+            _CurrentLevelWinTween?.Kill();
+            _CurrentLevelWinTween = lLevelTransform
+                .DOMoveY(lLevelTransform.position.y + _LevelAscendHeight, _LevelAscendDuration)
+                .SetEase(_LevelAscendEase);
+
+            return _CurrentLevelWinTween;
         }
         #endregion
 

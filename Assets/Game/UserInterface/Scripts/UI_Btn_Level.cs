@@ -4,6 +4,7 @@
 //  Note : MY_CONST, myPublic, m_MyProtected, _MyPrivate, lMyLocal, MyFunc(), pMyParam, onMyEvent, OnMyCallback, MyStruct
 #endregion
 
+using System;
 using Rush.Game;
 using Rush.Game.Core;
 using TMPro;
@@ -90,8 +91,11 @@ namespace Rush.UI
             _PreviewCamera.AddTargetWorldOffset(pSpawnPosition);
 
             
-
-
+            if (string.Equals(_LevelData.levelName, "Stadium", StringComparison.OrdinalIgnoreCase))
+            {
+                _PreviewCamera.SetRadius(75f);
+            }
+            _PreviewCamera.canRotate = true;
             _PreviewTexture = new RenderTexture(_PreviewResolution.x, _PreviewResolution.y, 24, RenderTextureFormat.ARGB32)            {
                 name = $"RT_{_LevelData.name}_Preview"
             };
@@ -147,18 +151,18 @@ namespace Rush.UI
         #region _____________________________| MOUSE EVENTS
 
         public void OnPointerEnter(PointerEventData eventData) {
-            _PreviewCamera.canRotate = true;
+            _PreviewCamera.canRotate = false;
             transform.localScale = Vector3.one * _HoveringScale; }
 
         public void OnPointerExit(PointerEventData eventData) {
-            _PreviewCamera.canRotate = false;
+            _PreviewCamera.canRotate = true;
             transform.localScale = Vector3.one; }
 
         private void OnButtonClicked() {
             CleanupTexture();
             Manager_Game.Instance.SpawnCurrentLevel(_LevelData);
                         Manager_Camera.Instance?.SetGameCameraActive();
-            Manager_Ui.Instance.Switch(_PanelToShow, _RootCard);
+            Manager_Ui.Instance.Switch(_PanelToShow, _RootCard, true);
         }
 
         #endregion

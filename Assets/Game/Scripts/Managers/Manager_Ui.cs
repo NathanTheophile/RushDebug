@@ -5,6 +5,7 @@
 //  Note : MY_CONST, myPublic, m_MyProtected, _MyPrivate, lMyLocal, MyFunc(), pMyParam, onMyEvent, OnMyCallback, MyStruct
 #endregion
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -37,9 +38,12 @@ namespace Rush.Game.Core
         [SerializeField] private Transform _SetupPhaseCard;
         private readonly Dictionary<Transform, Transform> _UiCardInstances = new();
         private Transform _CurrentCard;
-
+        [Header("Fade")]
+        [SerializeField] private float _FadeDuration = 1f;
+                [SerializeField] private CanvasGroup _FullBlackFade;
+        private readonly Dictionary<Transform, Coroutine> _FadeRoutines = new();
         [SerializeField] Manager_Game lManager;
-
+        private Coroutine _ShowRoutine;
         #endregion
 
         #region _____________________________| INIT
@@ -95,29 +99,57 @@ namespace Rush.Game.Core
             return lCard;
         }
 
-        public void Show(Transform pCard)
+        public void Show(Transform pCard, bool pFadeBlack = false)
         {
             if (pCard == null) return;
 
             Transform lCard = AddCardToScene(pCard);
             if (lCard == null) return;
 
-            HideOtherCards(lCard);
-            if (IsSetupPhaseCard(lCard))
-                ResetGameSpeed();
-            _CurrentCard = lCard;
-            lCard.gameObject.SetActive(true);
+            if (_ShowRoutine != null)
+                StopCoroutine(_ShowRoutine);
+
+            _ShowRoutine = StartCoroutine(ShowAfterFadeOut(lCard, pFadeBlack));
         }
 
-        private void HideOtherCards(Transform pCardToKeep)
+        private IEnumerator ShowAfterFadeOut(Transform pCard, bool pFadeBlack)
+        {
+            List<Transform> lOtherCards = CollectOtherCards(pCard);
+
+            if (IsSetupPhaseCard(pCard))
+                ResetGameSpeed();
+
+            _CurrentCard = pCard;
+
+            if (pFadeBlack)
+            {
+                yield return FadeBlack(true);
+                HideCardsImmediate(lOtherCards);
+            }
+            else
+            {
+                List<Transform> lCardsToWait = FadeOutCards(lOtherCards);
+                yield return WaitForFadeOuts(lCardsToWait);
+            }
+
+            FadeInCard(pCard);
+
+            if (pFadeBlack)
+                yield return FadeBlack(false);
+
+            _ShowRoutine = null;
+        }
+
+        private List<Transform> CollectOtherCards(Transform pCardToKeep)
         {
             if (pCardToKeep == null)
-                return;
+                return new List<Transform>();
 
             HashSet<Transform> lAllCards = new(_UiCards);
             foreach (Transform lRegistered in _UiCardInstances.Values)
                 lAllCards.Add(lRegistered);
 
+            List<Transform> lCardsToFade = new();
             foreach (Transform lCard in lAllCards)
             {
                 if (lCard == null)
@@ -126,11 +158,46 @@ namespace Rush.Game.Core
                 if (lCard == pCardToKeep)
                     continue;
 
+                lCardsToFade.Add(lCard);
+            }
+            return lCardsToFade;
+        }
+
+        private List<Transform> FadeOutCards(List<Transform> pCards)
+        {
+            List<Transform> lCardsToFade = new();
+            if (pCards == null)
+                return lCardsToFade;
+
+            foreach (Transform lCard in pCards)
+            {
+                FadeOutCard(lCard);
+                if (lCard != null)
+                    lCardsToFade.Add(lCard);
+            }
+
+            return lCardsToFade;
+        }
+
+        private void HideCardsImmediate(IEnumerable<Transform> pCards)
+        {
+            if (pCards == null)
+                return;
+
+            foreach (Transform lCard in pCards)
+            {
+                if (lCard == null)
+                    continue;
+
+                CancelFade(lCard, false);
+                CanvasGroup lGroup = EnsureCanvasGroup(lCard);
+                lGroup.alpha = 0f;
                 lCard.gameObject.SetActive(false);
+                _FadeRoutines.Remove(lCard);
             }
         }
 
-        public void Hide(Transform pCard)
+        public void Hide(Transform pCard, bool pFadeBlack = false)
         {
             if (pCard == null) return;
 
@@ -155,15 +222,23 @@ namespace Rush.Game.Core
 
             if (lCard == null) return;
 
-            lCard.gameObject.SetActive(false);
+            if (pFadeBlack && _FullBlackFade != null)
+            {
+                StartCoroutine(FadeBlackHideRoutine(lCard));
+            }
+            else
+            {
+                FadeOutCard(lCard);
+            }
+
             if (_CurrentCard == lCard)
                 _CurrentCard = null;
         }
 
-        public void Switch(Transform pCardToShow, Transform pCardToHide)
+        public void Switch(Transform pCardToShow, Transform pCardToHide, bool pFadeBlack = false)
         {
-            Hide(pCardToHide);
-            Show(pCardToShow);
+            Hide(pCardToHide, pFadeBlack);
+            Show(pCardToShow, pFadeBlack);
         }
 
         private void SwitchToWin()  { Switch(_WinScreen, _CurrentCard);}        
@@ -186,6 +261,135 @@ namespace Rush.Game.Core
 
         private void ResetGameSpeed() => Manager_Time.Instance.GlobalTickSpeed = 1f;
 
+        private void FadeInCard(Transform pCard)
+        {
+            if (pCard == null)
+                return;
+
+            CanvasGroup lGroup = EnsureCanvasGroup(pCard);
+            if (!pCard.gameObject.activeSelf)
+            {
+                lGroup.alpha = 0f;
+                pCard.gameObject.SetActive(true);
+            }
+
+            StartFadeRoutine(pCard, lGroup, 1f, false);
+        }
+
+        private void FadeOutCard(Transform pCard)
+        {
+            if (pCard == null)
+                return;
+
+            CanvasGroup lGroup = EnsureCanvasGroup(pCard);
+            StartFadeRoutine(pCard, lGroup, 0f, true);
+        }
+
+        private IEnumerator WaitForFadeOuts(List<Transform> pCards)
+        {
+            if (pCards == null || pCards.Count == 0)
+                yield break;
+
+            bool lWaiting = true;
+            while (lWaiting)
+            {
+                lWaiting = false;
+                foreach (Transform lCard in pCards)
+                {
+                    if (lCard != null && _FadeRoutines.ContainsKey(lCard))
+                    {
+                        lWaiting = true;
+                        break;
+                    }
+                }
+
+                if (lWaiting)
+                    yield return null;
+            }
+        }
+
+        private CanvasGroup EnsureCanvasGroup(Transform pCard)
+        {
+            CanvasGroup lGroup = pCard.GetComponent<CanvasGroup>();
+            if (lGroup == null)
+                lGroup = pCard.gameObject.AddComponent<CanvasGroup>();
+
+            return lGroup;
+        }
+
+        private void CancelFade(Transform pCard, bool pDeactivateAfter)
+        {
+            if (_FadeRoutines.TryGetValue(pCard, out Coroutine lRoutine))
+                StopCoroutine(lRoutine);
+
+            _FadeRoutines.Remove(pCard);
+
+            if (pDeactivateAfter && pCard != null)
+                pCard.gameObject.SetActive(false);
+        }
+
+        private Coroutine StartFadeRoutine(Transform pCard, CanvasGroup pGroup, float pTargetAlpha, bool pDeactivateAfter)
+        {
+            CancelFade(pCard, false);
+
+            Coroutine lRoutine = StartCoroutine(FadeRoutine(pCard, pGroup, pTargetAlpha, pDeactivateAfter));
+            _FadeRoutines[pCard] = lRoutine;
+            return lRoutine;
+        }
+
+        private IEnumerator FadeRoutine(Transform pCard, CanvasGroup pGroup, float pTargetAlpha, bool pDeactivateAfter)
+        {
+            float lDuration = Mathf.Max(0.01f, _FadeDuration);
+            float lStartAlpha = pGroup.alpha;
+            float lTimer = 0f;
+
+            while (lTimer < lDuration)
+            {
+                lTimer += Time.unscaledDeltaTime;
+                float lProgress = Mathf.Clamp01(lTimer / lDuration);
+                pGroup.alpha = Mathf.Lerp(lStartAlpha, pTargetAlpha, lProgress);
+                yield return null;
+            }
+
+            pGroup.alpha = pTargetAlpha;
+
+            if (pDeactivateAfter && Mathf.Approximately(pTargetAlpha, 0f))
+                pCard.gameObject.SetActive(false);
+
+            _FadeRoutines.Remove(pCard);
+        }
+
+        private IEnumerator FadeBlack(bool pFadeIn)
+        {
+            if (_FullBlackFade == null)
+                yield break;
+
+            if (pFadeIn && !_FullBlackFade.gameObject.activeSelf)
+            {
+                _FullBlackFade.alpha = 0f;
+                _FullBlackFade.gameObject.SetActive(true);
+            }
+
+            float lTarget = pFadeIn ? 1f : 0f;
+            bool lDeactivate = !pFadeIn;
+            Coroutine lRoutine = StartFadeRoutine(_FullBlackFade.transform, _FullBlackFade, lTarget, lDeactivate);
+
+            if (lRoutine != null)
+                yield return lRoutine;
+        }
+
+        private IEnumerator FadeBlackHideRoutine(Transform pCard)
+        {
+            yield return FadeBlack(true);
+
+            CancelFade(pCard, false);
+            CanvasGroup lGroup = EnsureCanvasGroup(pCard);
+            lGroup.alpha = 0f;
+            pCard.gameObject.SetActive(false);
+            _FadeRoutines.Remove(pCard);
+
+            yield return FadeBlack(false);
+        }
 
         #endregion
     }

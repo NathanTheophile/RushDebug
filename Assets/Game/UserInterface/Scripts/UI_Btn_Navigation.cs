@@ -27,7 +27,7 @@ public class UI_Btn_Navigation : MonoBehaviour
     [SerializeField] private Button _Button;
     [SerializeField] private Transform _CardToShow;
     [SerializeField] private Transform _CardToHide;
-
+    [SerializeField] private bool _FadeBlack;
     #endregion
 
     #region _____________________________| UNITY
@@ -60,11 +60,11 @@ public class UI_Btn_Navigation : MonoBehaviour
 
     #region _____________________________| UI METHODS
    
-    private void Show()     => Manager_Ui.Instance.Show(_CardToShow);
+    private void Show()     => Manager_Ui.Instance.Show(_CardToShow, _FadeBlack);
 
-    private void Hide()     => Manager_Ui.Instance.Hide(_CardToHide);
+    private void Hide()     => Manager_Ui.Instance.Hide(_CardToHide, _FadeBlack);
 
-    private void Switch()   => Manager_Ui.Instance.Switch(_CardToShow, _CardToHide);
+    private void Switch()   => Manager_Ui.Instance.Switch(_CardToShow, _CardToHide, _FadeBlack);
 
     void QuitGame()         => Application.Quit();
 

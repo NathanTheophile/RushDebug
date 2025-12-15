@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using Rush.Game.Core;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,12 +11,17 @@ namespace Rush.UI
         #region _____________________________/ VALUES
 
         [SerializeField] private Slider _GameSpeedSlider;
+        [SerializeField] private TMP_Text _GameSpeedValueText;
 
         #endregion
 
         #region _____________________________| UNITY
 
-        private void Awake() => _GameSpeedSlider ??= GetComponentInParent<Slider>();
+        private void Awake()
+        {
+            _GameSpeedSlider ??= GetComponentInParent<Slider>();
+            _GameSpeedValueText ??= GetComponentInChildren<TMP_Text>();
+        }
 
         private void Start()
         {
@@ -23,21 +29,33 @@ namespace Rush.UI
                 return;
 
             _GameSpeedSlider.onValueChanged.AddListener(OnSliderValueChanged);
-            _GameSpeedSlider.value = 1f;
-            Manager_Time.Instance.GlobalTickSpeed = 1f;
+            ApplySliderValue(1f, true);
         }
 
         private void OnEnable()
         {
-                        _GameSpeedSlider.value = 1f;
-            Manager_Time.Instance.GlobalTickSpeed = 1f;
+            ApplySliderValue(1f, true);
         }
 
         #endregion
 
         #region _____________________________| CALLBACKS
 
-        private void OnSliderValueChanged(float pValue) => Manager_Time.Instance.GlobalTickSpeed = pValue;
+        private void OnSliderValueChanged(float pValue) => ApplySliderValue(pValue);
+
+        private void ApplySliderValue(float pValue, bool pSetSliderValue = false)
+        {
+            if (_GameSpeedSlider == null)
+                return;
+
+            if (pSetSliderValue)
+                _GameSpeedSlider.SetValueWithoutNotify(pValue);
+
+            Manager_Time.Instance.GlobalTickSpeed = pValue;
+
+            if (_GameSpeedValueText != null)
+                _GameSpeedValueText.text = pValue.ToString("0.0");
+        }
 
         #endregion
     }
