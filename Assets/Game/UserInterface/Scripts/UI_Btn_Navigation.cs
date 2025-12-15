@@ -20,7 +20,7 @@ public class UI_Btn_Navigation : MonoBehaviour
     [SerializeField] private BtnTransitions _BtnType;
     [SerializeField] private bool _LevelUnloader, _Retry, _StartGame;
     [SerializeField] private bool _FadeBlack;
-    
+        [SerializeField] private bool _DeactivateHiddenCardInstantly;
     #endregion
 
     #region _____________________________/ REFS
@@ -74,9 +74,9 @@ public class UI_Btn_Navigation : MonoBehaviour
 
     private void Show()     => Manager_Ui.Instance.Show(_CardToShow, _FadeBlack);
 
-    private void Hide()     => Manager_Ui.Instance.Hide(_CardToHide, _FadeBlack);
+    private void Hide()     => Manager_Ui.Instance.Hide(_CardToHide, _FadeBlack, _DeactivateHiddenCardInstantly);
 
-    private void Switch()   => Manager_Ui.Instance.Switch(_CardToShow, _CardToHide, _FadeBlack);
+    private void Switch()   => Manager_Ui.Instance.Switch(_CardToShow, _CardToHide, _FadeBlack, _DeactivateHiddenCardInstantly);
 
     void QuitGame()         => Application.Quit();
 

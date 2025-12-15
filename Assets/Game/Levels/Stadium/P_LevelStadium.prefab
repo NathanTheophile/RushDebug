@@ -2215,6 +2215,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8880698536992543636, guid: 309407efdd18aa94e812c058453fc781, type: 3}
+      propertyPath: m_Intensity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -8880698536992543636, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
@@ -2275,12 +2279,20 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8355579101202053003, guid: 309407efdd18aa94e812c058453fc781, type: 3}
+      propertyPath: m_Intensity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -8355579101202053003, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8328643992424912420, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_CastShadows
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8246912899171996075, guid: 309407efdd18aa94e812c058453fc781, type: 3}
+      propertyPath: m_Intensity
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -8246912899171996075, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Lightmapping
@@ -2299,12 +2311,20 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -6070776999122277864, guid: 309407efdd18aa94e812c058453fc781, type: 3}
+      propertyPath: m_Intensity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -6070776999122277864, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -5969567040919614014, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_CastShadows
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -4904782989068966781, guid: 309407efdd18aa94e812c058453fc781, type: 3}
+      propertyPath: m_Intensity
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -4904782989068966781, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Lightmapping
@@ -2347,12 +2367,20 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -2443036302556752375, guid: 309407efdd18aa94e812c058453fc781, type: 3}
+      propertyPath: m_Intensity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -2443036302556752375, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -1370014929767047855, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_CastShadows
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -1294892128559850198, guid: 309407efdd18aa94e812c058453fc781, type: 3}
+      propertyPath: m_Intensity
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -1294892128559850198, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Lightmapping
@@ -2377,6 +2405,10 @@ PrefabInstance:
     - target: {fileID: 1017423035395853301, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_CastShadows
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1386601310104797757, guid: 309407efdd18aa94e812c058453fc781, type: 3}
+      propertyPath: m_Intensity
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1386601310104797757, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Lightmapping
@@ -2415,6 +2447,10 @@ PrefabInstance:
       value: 0.97735846
       objectReference: {fileID: 0}
     - target: {fileID: 2847241375913772948, guid: 309407efdd18aa94e812c058453fc781, type: 3}
+      propertyPath: m_Intensity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2847241375913772948, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
@@ -2429,6 +2465,10 @@ PrefabInstance:
     - target: {fileID: 3645896531079860235, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_CastShadows
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073680261343121730, guid: 309407efdd18aa94e812c058453fc781, type: 3}
+      propertyPath: m_Intensity
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4073680261343121730, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Lightmapping
@@ -2455,6 +2495,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: b8889ccbb471d9b40957b093e6bcbbe1, type: 2}
     - target: {fileID: 8555210245918711917, guid: 309407efdd18aa94e812c058453fc781, type: 3}
+      propertyPath: m_Intensity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8555210245918711917, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
@@ -2471,6 +2515,10 @@ PrefabInstance:
       value: 0.97735846
       objectReference: {fileID: 0}
     - target: {fileID: 8594763072654853305, guid: 309407efdd18aa94e812c058453fc781, type: 3}
+      propertyPath: m_Intensity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8594763072654853305, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
@@ -2485,6 +2533,10 @@ PrefabInstance:
     - target: {fileID: 9170246202968348372, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Color.r
       value: 0.97735846
+      objectReference: {fileID: 0}
+    - target: {fileID: 9170246202968348372, guid: 309407efdd18aa94e812c058453fc781, type: 3}
+      propertyPath: m_Intensity
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 9170246202968348372, guid: 309407efdd18aa94e812c058453fc781, type: 3}
       propertyPath: m_Lightmapping
@@ -9717,6 +9769,9 @@ MonoBehaviour:
   levitationSpeed: 0.35
   maxStartDelay: 1
   levitationEase: 7
+  ascensionHeight: 30
+  ascensionDuration: 3
+  ascensionEase: 9
 --- !u!4 &6572325624761699298 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 225b422c74b15a74782e04a2a8d6bd70, type: 3}

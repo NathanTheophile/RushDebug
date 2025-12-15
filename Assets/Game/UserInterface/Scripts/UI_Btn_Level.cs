@@ -29,7 +29,7 @@ namespace Rush.UI
         private Transform _RootCard;
         public GameObject instantiatedLevel { get; private set; }
         [SerializeField] private Vector2Int _PreviewResolution = new Vector2Int(512, 512);
-
+        [SerializeField] private bool _DeactivateHiddenCardInstantly = true;
         #endregion
 
         #region _____________________________/ DATA
@@ -162,8 +162,7 @@ namespace Rush.UI
             CleanupTexture();
             Manager_Game.Instance.SpawnCurrentLevel(_LevelData);
                         Manager_Camera.Instance?.SetGameCameraActive();
-            Manager_Ui.Instance.Switch(_PanelToShow, _RootCard, true);
-        }
+            Manager_Ui.Instance.Switch(_PanelToShow, _RootCard, true, _DeactivateHiddenCardInstantly);        }
 
         #endregion
     }

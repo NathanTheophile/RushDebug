@@ -206,7 +206,7 @@ namespace Rush.Game.Core
             }
         }
 
-        public void Hide(Transform pCard, bool pFadeBlack = false)
+        public void Hide(Transform pCard, bool pFadeBlack = false, bool pDeactivateHiddenCardInstantly = false)
         {
             if (pCard == null) return;
 
@@ -233,20 +233,20 @@ namespace Rush.Game.Core
 
             if (pFadeBlack && _FullBlackFade != null)
             {
-                StartCoroutine(FadeBlackHideRoutine(lCard));
+                StartCoroutine(FadeBlackHideRoutine(lCard, pDeactivateHiddenCardInstantly));
             }
             else
             {
-                FadeOutCard(lCard);
+                FadeOutCard(lCard, pDeactivateHiddenCardInstantly);
             }
 
             if (_CurrentCard == lCard)
                 _CurrentCard = null;
         }
 
-        public void Switch(Transform pCardToShow, Transform pCardToHide, bool pFadeBlack = false)
+        public void Switch(Transform pCardToShow, Transform pCardToHide, bool pFadeBlack = false, bool pDeactivateHiddenCardInstantly = false)
         {
-            Hide(pCardToHide, pFadeBlack);
+            Hide(pCardToHide, pFadeBlack, pDeactivateHiddenCardInstantly);
             Show(pCardToShow, pFadeBlack);
         }
 
@@ -285,12 +285,23 @@ namespace Rush.Game.Core
             StartFadeRoutine(pCard, lGroup, 1f, false);
         }
 
-        private void FadeOutCard(Transform pCard)
+        private void FadeOutCard(Transform pCard, bool pDeactivateImmediately = false)
         {
             if (pCard == null)
                 return;
 
             CanvasGroup lGroup = EnsureCanvasGroup(pCard);
+
+            if (pDeactivateImmediately)
+            {
+                lGroup.alpha = 0f;
+                pCard.gameObject.SetActive(false);
+                CancelFade(pCard, false);
+                _FadeRoutines.Remove(pCard);
+                StartFadeRoutine(pCard, lGroup, 0f, false, true);
+                return;
+            }
+
             StartFadeRoutine(pCard, lGroup, 0f, true);
         }
 
@@ -337,20 +348,23 @@ namespace Rush.Game.Core
                 pCard.gameObject.SetActive(false);
         }
 
-        private Coroutine StartFadeRoutine(Transform pCard, CanvasGroup pGroup, float pTargetAlpha, bool pDeactivateAfter)
+        private Coroutine StartFadeRoutine(Transform pCard, CanvasGroup pGroup, float pTargetAlpha, bool pDeactivateAfter, bool pDeactivateOnStart = false)
         {
             CancelFade(pCard, false);
 
-            Coroutine lRoutine = StartCoroutine(FadeRoutine(pCard, pGroup, pTargetAlpha, pDeactivateAfter));
+            Coroutine lRoutine = StartCoroutine(FadeRoutine(pCard, pGroup, pTargetAlpha, pDeactivateAfter, pDeactivateOnStart));
             _FadeRoutines[pCard] = lRoutine;
             return lRoutine;
         }
 
-        private IEnumerator FadeRoutine(Transform pCard, CanvasGroup pGroup, float pTargetAlpha, bool pDeactivateAfter)
+        private IEnumerator FadeRoutine(Transform pCard, CanvasGroup pGroup, float pTargetAlpha, bool pDeactivateAfter, bool pDeactivateOnStart)
         {
             float lDuration = Mathf.Max(0.01f, _FadeDuration);
             float lStartAlpha = pGroup.alpha;
             float lTimer = 0f;
+
+            if (pDeactivateOnStart)
+                pCard.gameObject.SetActive(false);
 
             while (lTimer < lDuration)
             {
@@ -410,15 +424,27 @@ namespace Rush.Game.Core
             }
         }
 
-        private IEnumerator FadeBlackHideRoutine(Transform pCard)
+        private IEnumerator FadeBlackHideRoutine(Transform pCard, bool pDeactivateOnStart)
         {
+            if (pDeactivateOnStart)
+            {
+                CancelFade(pCard, false);
+                CanvasGroup lPreGroup = EnsureCanvasGroup(pCard);
+                lPreGroup.alpha = 0f;
+                pCard.gameObject.SetActive(false);
+                _FadeRoutines.Remove(pCard);
+            }
+
             yield return FadeBlack(true);
 
-            CancelFade(pCard, false);
-            CanvasGroup lGroup = EnsureCanvasGroup(pCard);
-            lGroup.alpha = 0f;
-            pCard.gameObject.SetActive(false);
-            _FadeRoutines.Remove(pCard);
+            if (!pDeactivateOnStart)
+            {
+                CancelFade(pCard, false);
+                CanvasGroup lGroup = EnsureCanvasGroup(pCard);
+                lGroup.alpha = 0f;
+                pCard.gameObject.SetActive(false);
+                _FadeRoutines.Remove(pCard);
+            }
 
             yield return FadeBlack(false);
         }

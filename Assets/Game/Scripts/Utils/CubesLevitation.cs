@@ -11,7 +11,7 @@ public class ChildrenLevitation : MonoBehaviour
     [SerializeField] private Ease levitationEase = Ease.OutBack;
 
     [Header("Win Ascension")]
-    [SerializeField] private float ascensionHeight = 15f;
+    [SerializeField] private float ascensionHeight = 30f;
     [SerializeField] private float ascensionDuration = 3f;
     [SerializeField] private Ease ascensionEase = Ease.OutCubic;
     private Coroutine _SubscribeRoutine;

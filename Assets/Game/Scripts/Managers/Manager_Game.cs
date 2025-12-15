@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Rush.Game.Core;
 using UnityEngine;
+using UnityEngine.AdaptivePerformance.VisualScripting;
 
 namespace Rush.Game
 {
@@ -51,6 +52,8 @@ namespace Rush.Game
         [SerializeField] private Ease _LevelAscendEase = Ease.OutCubic;
         [SerializeField, Min(0f)] private float _LevelAscendDelayInSeconds = 0f;
         private Tween _CurrentLevelWinTween;
+                [SerializeField] private List<AudioClip> _CubeArrivedClips = new();
+        private int _CurrentCubeArrivedClipIndex;
         #region _____________________________/ LEVEL DATA
 
         public SO_LevelData CurrentLevel { get; private set; }
@@ -64,7 +67,14 @@ namespace Rush.Game
 
         #region _____________________________| INIT
 
-        private void Awake() => CheckForInstance();
+        private void Awake()
+        {
+            CheckForInstance();
+        #if UNITY_ANDROID
+        Application.targetFrameRate = 60;
+        #endif
+        
+        }
 
         #endregion
 
@@ -101,6 +111,7 @@ namespace Rush.Game
         private System.Collections.IEnumerator GameWonAfterDelay()
         {
             _HasTriggeredGameWon = true;
+            TilePlacer.Instance.ResetPlacedTiles();
             InvokeGameWonSequenceStarted();
             if (_LevelAscendDelayInSeconds > 0f)
             {
@@ -125,6 +136,8 @@ namespace Rush.Game
             _CubesArrived = 0;
             _HasTriggeredGameWon = false;
                         _HasTriggeredGameOver = false;
+                                    _CurrentCubeArrivedClipIndex = 0;
+
             CurrentLevel = pLevelData;
             _CurrentLevelPrefab = Instantiate(CurrentLevel.levelPrefab, Vector3.zero, Quaternion.identity);
         }
@@ -144,12 +157,23 @@ namespace Rush.Game
             _CurrentLevelWinTween = null;
             Destroy(_CurrentLevelPrefab);
         }
+        public AudioClip GetNextCubeArrivedClip()
+        {
+            if (_CubeArrivedClips == null || _CubeArrivedClips.Count == 0)
+                return null;
+
+            AudioClip lClip = _CubeArrivedClips[_CurrentCubeArrivedClipIndex];
+            _CurrentCubeArrivedClipIndex = (_CurrentCubeArrivedClipIndex + 1) % _CubeArrivedClips.Count;
+            return lClip;
+        }
 
         public void Retry()
         {
             _CubesToComplete = 0;
             _CubesArrived = 0;
             _HasTriggeredGameOver = false;
+                        _CurrentCubeArrivedClipIndex = 0;
+
             _CurrentLevelWinTween?.Kill();
             _CurrentLevelWinTween = null;
             onGameRetry.Invoke();

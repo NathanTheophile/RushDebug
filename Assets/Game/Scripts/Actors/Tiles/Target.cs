@@ -112,8 +112,9 @@ namespace Rush.Game
             timeManager.objectsAffectedByTime.Remove(pCube);
             pCube.onTileDetected -= tileManager.TryGetTile;
                         pCube.onCubeDeath -= gameManager.GameOver;
-            Manager_Audio.Instance.PlayAtPosition(_CubeArrivedClip, transform.position, pMixerGroup: _CubeArrivedBus);
-            gameManager.UpdateCubeArrived();
+            AudioClip lClipToPlay = gameManager?.GetNextCubeArrivedClip() ?? _CubeArrivedClip;
+            if (lClipToPlay != null && Manager_Audio.Instance != null)
+                Manager_Audio.Instance.PlayAtPosition(lClipToPlay, transform.position, pMixerGroup: _CubeArrivedBus);            gameManager.UpdateCubeArrived();
 
             pCube.PlayValidationTween(() => Destroy(pCube.GameObject()));
         }
