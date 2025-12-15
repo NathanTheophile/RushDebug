@@ -210,6 +210,7 @@ MonoBehaviour:
   _BtnLevel: {fileID: 4053507832295043765}
   _PanelToShow: {fileID: 5411068302536572238, guid: 7256607c2b184fe4b94d3e95929af0e6, type: 3}
   _CameraPrefab: {fileID: 8527800346811119959, guid: 9b9841144ce7af749846feea7bd1248a, type: 3}
+  thisLevelData: {fileID: 0}
   _PreviewResolution: {x: 512, y: 512}
 --- !u!114 &4053507832295043765
 MonoBehaviour:
@@ -322,8 +323,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Lvl Name
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4b66009e89aa2184290f13ce94ae0d9d, type: 2}
+  m_sharedMaterial: {fileID: 1429364700421479147, guid: 4b66009e89aa2184290f13ce94ae0d9d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

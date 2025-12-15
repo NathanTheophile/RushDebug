@@ -40,6 +40,12 @@ namespace Rush.Game
         private ValidationTweenType _ValidationTweenType = ValidationTweenType.Normal;
         private Tween _ValidationTween;
         public ValidationTweenType CurrentValidationTweenType => _ValidationTweenType;
+
+
+                [Header("Audio")]
+        [SerializeField] private AudioClip _CubeDeathClip;
+        [SerializeField] private string _CubeDeathBus = "SFX";
+        [SerializeField, Range(0f, 1f)] private float _CubeDeathVolume = 1f;
         #endregion
 
         #region _________________________/ TIME VALUES
@@ -120,7 +126,7 @@ namespace Rush.Game
         /// <returns>retourne si le raycast a détecté qq chose et si tile retourne tile sinon null</returns>
         private void TryFindGround(out RaycastHit pHit)
         {
-            float lMaxDistance = _GridSize * 3f;
+            float lMaxDistance = _GridSize * 5f;
 
             if (Physics.Raycast(_Self.position, Vector3.down, out pHit, lMaxDistance, _GroundLayer | _TilesLayer))
             {
@@ -269,11 +275,19 @@ namespace Rush.Game
         private void TriggerCubeDeath(ValidationTweenType tweenType)
         {
             _ValidationTweenType = tweenType;
+                        PlayCubeDeathSound();
             SpawnCollisionUI();
             Manager_Time.Instance.SetPauseStatus(true);
             onCubeDeath?.Invoke(this);
         }
+        private void PlayCubeDeathSound()
+        {
+            if (_CubeDeathClip == null || Manager_Audio.Instance == null)
+                return;
 
+            Vector3 playPosition = _Self != null ? _Self.position : transform.position;
+            Manager_Audio.Instance.PlayAtPosition(_CubeDeathClip, playPosition, pMixerGroup: _CubeDeathBus, pVolume: _CubeDeathVolume);
+        }
         private void SpawnCollisionUI()
         {
             if (_CollisionUIPrefab == null) return;

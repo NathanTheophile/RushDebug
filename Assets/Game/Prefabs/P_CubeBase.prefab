@@ -132,6 +132,9 @@ MonoBehaviour:
   _ValidationTweenDuration: 5
   _ValidationJumpDuration: 3
   _ValidationJumpPower: 3
+  _CubeDeathClip: {fileID: 8300000, guid: 117a2f1eff12adc47bcd062ab21954f3, type: 3}
+  _CubeDeathBus: Effects
+  _CubeDeathVolume: 1
   justTeleported: 0
   _GroundLayer:
     serializedVersion: 2

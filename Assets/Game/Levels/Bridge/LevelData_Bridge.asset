@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c63de5dcf1d758f4ebdd911981c3b929, type: 3}
+  m_Name: LevelData_Bridge
+  m_EditorClassIdentifier: 
+  levelPrefab: {fileID: 8889469495092285403, guid: 45b0210a75f19644080d7da2df006793, type: 3}
+  levelName: Bridge
+  stopperTicks: 2
+  inventory:
+  - type: 1
+    orientation: 3
+    quantity: 1
+    tilePrefab: {fileID: 1519708505807681995, guid: d8933d0591b5185449cd286b9f4b5de1, type: 3}
+    previewPrefab: {fileID: 1519708505807681995, guid: d8933d0591b5185449cd286b9f4b5de1, type: 3}
+  - type: 1
+    orientation: 1
+    quantity: 1
+    tilePrefab: {fileID: 1519708505807681995, guid: d8933d0591b5185449cd286b9f4b5de1, type: 3}
+    previewPrefab: {fileID: 1519708505807681995, guid: d8933d0591b5185449cd286b9f4b5de1, type: 3}
+  - type: 2
+    orientation: 2
+    quantity: 1
+    tilePrefab: {fileID: 1519708505807681995, guid: 12c591d36e437dd4cafa2d34260e583e, type: 3}
+    previewPrefab: {fileID: 1519708505807681995, guid: 12c591d36e437dd4cafa2d34260e583e, type: 3}
+  - type: 5
+    orientation: 2
+    quantity: 1
+    tilePrefab: {fileID: 1519708505807681995, guid: 035905dcdb8fce946abc320f46ed45d5, type: 3}
+    previewPrefab: {fileID: 1519708505807681995, guid: 035905dcdb8fce946abc320f46ed45d5, type: 3}

@@ -64,6 +64,10 @@ PrefabInstance:
       propertyPath: m_CameraType
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5318056061948014317, guid: 0da9d297a11591a4389d7a85b0792036, type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8147160801612577305, guid: 0da9d297a11591a4389d7a85b0792036, type: 3}
       propertyPath: m_Name
       value: P_CameraPreview
@@ -120,7 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _TargetPosition: {x: 0, y: 0, z: 0}
-  _Radius: 40
+  _Radius: 60
   _Colatitude: 30
   _RotateSpeed: 45
   canRotate: 0

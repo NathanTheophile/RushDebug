@@ -177,6 +177,7 @@ MonoBehaviour:
   _BtnType: 0
   _LevelUnloader: 0
   _Retry: 0
+  _StartGame: 0
   _Button: {fileID: 1337062903208634358}
   _CardToShow: {fileID: 0}
   _CardToHide: {fileID: 0}
@@ -239,6 +240,12 @@ MonoBehaviour:
   _LogoRotationDuration: 1.2
   _LogoRotationDelay: 1
   _LogoScale: 1.2
+  _ClickScale: 0.92
+  _ClickDuration: 0.08
+  _ClickEase: 6
+  _ClickSound: {fileID: 8300000, guid: a271809eaff30954fa44eda3daf4ca8e, type: 3}
+  _ClickVolume: 1
+  _MixerGroup: Interface
 --- !u!1 &3247140723233040776
 GameObject:
   m_ObjectHideFlags: 0

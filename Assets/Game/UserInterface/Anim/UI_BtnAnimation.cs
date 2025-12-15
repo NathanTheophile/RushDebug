@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Rush.Game.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -23,6 +24,10 @@ public class UI_BtnAnimation : MonoBehaviour, IPointerEnterHandler, IPointerExit
     [SerializeField] private float _ClickScale = 0.92f;
     [SerializeField] private float _ClickDuration = 0.08f;
     [SerializeField] private Ease _ClickEase = Ease.OutQuad;
+        [Header("Audio")]
+    [SerializeField] private AudioClip _ClickSound;
+    [SerializeField, Range(0f, 1f)] private float _ClickVolume = 1f;
+    [SerializeField] private string _MixerGroup = "Interface";
     private Tween _scaleTween;
     private Tween _leftLogoTween;
     private Tween _rightLogoTween;
@@ -102,6 +107,9 @@ public class UI_BtnAnimation : MonoBehaviour, IPointerEnterHandler, IPointerExit
         _scaleTween = DOTween.Sequence()
             .Append(transform.DOScale(_ClickScale, _ClickDuration).SetEase(_ClickEase))
             .Append(transform.DOScale(1f, _ClickDuration).SetEase(_ClickEase));
+
+                    if (_ClickSound != null && Manager_Audio.Instance != null)
+            Manager_Audio.Instance.PlayOneShot(_ClickSound, pVolume: _ClickVolume, pMixerGroup: _MixerGroup);
     }
     public void OnPointerExit(PointerEventData eventData)
     {

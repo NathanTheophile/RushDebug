@@ -117,8 +117,12 @@ public class TilePlacer : MonoBehaviour
 
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
-        Ray lRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Debug.DrawRay(lRay.origin, lRay.direction * 20, Color.white);
+        Camera lRaycastCamera = Manager_Camera.Instance?.GetActiveCameraOrMain() ?? Camera.main;
+
+        if (lRaycastCamera == null)
+            return;
+
+        Ray lRay = lRaycastCamera.ScreenPointToRay(Input.mousePosition);
 
         RaycastHit lHitObject;
         _HasGroundHit = false;

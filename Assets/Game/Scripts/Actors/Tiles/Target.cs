@@ -23,7 +23,9 @@ namespace Rush.Game
         [SerializeField] private Light _Light;
         [SerializeField, Min(0f)] private float _LightPulseDuration = 1.5f;
         [SerializeField] private Vector2 _LightPulseIntensity = new(0.7f, 1.2f);
-
+        [Header("Audio")]
+        [SerializeField] private AudioClip _CubeArrivedClip;
+        [SerializeField] private string _CubeArrivedBus = "SFX";
         private Tween _LightTween;
         private float _BaseLightIntensity = 1f;
         [SerializeField] GameObject fleurs;
@@ -110,7 +112,7 @@ namespace Rush.Game
             timeManager.objectsAffectedByTime.Remove(pCube);
             pCube.onTileDetected -= tileManager.TryGetTile;
                         pCube.onCubeDeath -= gameManager.GameOver;
-
+            Manager_Audio.Instance.PlayAtPosition(_CubeArrivedClip, transform.position, pMixerGroup: _CubeArrivedBus);
             gameManager.UpdateCubeArrived();
 
             pCube.PlayValidationTween(() => Destroy(pCube.GameObject()));

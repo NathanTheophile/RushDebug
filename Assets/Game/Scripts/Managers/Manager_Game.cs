@@ -41,6 +41,9 @@ namespace Rush.Game
         public event Action onGameWon;
         public event Action onGameStart;
 
+        [Header("Audio")]
+        [SerializeField] private AudioClip _WinClip;
+        [SerializeField] private string _WinBus = "SFX";
         public event Action onGameRetry;
 
         #region _____________________________/ LEVEL DATA
@@ -99,7 +102,7 @@ namespace Rush.Game
             {
                 yield return new WaitForSeconds(_GameWonDelayInSeconds);
             }
-
+            PlayWinSound();
             onGameWon?.Invoke();
             Manager_Time.Instance.SetPauseStatus(true);
         }
@@ -143,7 +146,13 @@ namespace Rush.Game
         {
             onGameStart.Invoke();
         }
+        private void PlayWinSound()
+        {
+            if (_WinClip == null || Manager_Audio.Instance == null)
+                return;
 
+            Manager_Audio.Instance.PlayOneShot(_WinClip, pMixerGroup: _WinBus);
+        }
         #endregion
 
         #region _____________________________/ DESTROY

@@ -555,7 +555,7 @@ PrefabInstance:
     - target: {fileID: 6509980423493450206, guid: 792351b60737e7746a4497135ede3564, type: 3}
       propertyPath: _CardToShow
       value: 
-      objectReference: {fileID: 4795109341393439310, guid: b58ca5e5effd6114fb3758998dfd225f, type: 3}
+      objectReference: {fileID: 4795109341393439310, guid: 0d313cee4cb93e3488fab6d05a7b25ae, type: 3}
     - target: {fileID: 6509980423493450206, guid: 792351b60737e7746a4497135ede3564, type: 3}
       propertyPath: _LevelUnloader
       value: 1

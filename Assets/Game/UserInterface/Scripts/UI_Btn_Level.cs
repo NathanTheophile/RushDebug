@@ -23,6 +23,7 @@ namespace Rush.UI
         [SerializeField] private Button _BtnLevel;
         [SerializeField] private Transform _PanelToShow;
         [SerializeField] private Camera _CameraPrefab;
+        [SerializeField] private SO_LevelData thisLevelData;
         private RenderTexture _PreviewTexture;
         private Transform _RootCard;
         public GameObject instantiatedLevel { get; private set; }
@@ -76,6 +77,9 @@ namespace Rush.UI
                 return;
             }
 
+                        _Camera.clearFlags = CameraClearFlags.SolidColor;
+            _Camera.backgroundColor = Color.clear;
+
             if (!_Camera.TryGetComponent(out _PreviewCamera))
             {
                 Debug.LogWarning("PreviewCamera component missing on preview camera prefab. Adding one at runtime to avoid breaking the level selector preview.");
@@ -85,9 +89,10 @@ namespace Rush.UI
 
             _PreviewCamera.AddTargetWorldOffset(pSpawnPosition);
 
+            
 
-            _PreviewTexture = new RenderTexture(_PreviewResolution.x, _PreviewResolution.y, 24)
-            {
+
+            _PreviewTexture = new RenderTexture(_PreviewResolution.x, _PreviewResolution.y, 24, RenderTextureFormat.ARGB32)            {
                 name = $"RT_{_LevelData.name}_Preview"
             };
 
@@ -152,6 +157,7 @@ namespace Rush.UI
         private void OnButtonClicked() {
             CleanupTexture();
             Manager_Game.Instance.SpawnCurrentLevel(_LevelData);
+                        Manager_Camera.Instance?.SetGameCameraActive();
             Manager_Ui.Instance.Switch(_PanelToShow, _RootCard);
         }
 
