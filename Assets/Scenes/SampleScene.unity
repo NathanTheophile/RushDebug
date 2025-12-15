@@ -437,6 +437,9 @@ MonoBehaviour:
   _TilePlacer: {fileID: 0}
   _WinClip: {fileID: 8300000, guid: 024a794f84c8d8045bc16fbcc7abd462, type: 3}
   _WinBus: Effects
+  _LevelAscendHeight: 30
+  _LevelAscendDuration: 5
+  _LevelAscendEase: 9
   _CurrentLevelPrefab: {fileID: 0}
 --- !u!114 &293031530
 MonoBehaviour:
@@ -456,6 +459,8 @@ MonoBehaviour:
   _UiCards:
   - {fileID: 1562365956}
   _SetupPhaseCard: {fileID: 0}
+  _FadeDuration: 1
+  _FullBlackPanel: {fileID: 7513881254397292158, guid: 17e7fbc77134dba48982ebb869259545, type: 3}
   lManager: {fileID: 293031529}
 --- !u!114 &293031531
 MonoBehaviour:

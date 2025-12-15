@@ -40,7 +40,7 @@ namespace Rush.Game
         public event Action onGameOver;
         public event Action onGameWon;
         public event Action onGameStart;
-
+        public event Action onGameWonSequenceStarted;
         [Header("Audio")]
         [SerializeField] private AudioClip _WinClip;
         [SerializeField] private string _WinBus = "SFX";

@@ -181,6 +181,7 @@ MonoBehaviour:
   _Button: {fileID: 1337062903208634358}
   _CardToShow: {fileID: 0}
   _CardToHide: {fileID: 0}
+  _FadeBlack: 1
 --- !u!222 &8928074903486155488
 CanvasRenderer:
   m_ObjectHideFlags: 0
