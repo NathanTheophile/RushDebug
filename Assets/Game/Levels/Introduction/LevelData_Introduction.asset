@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c63de5dcf1d758f4ebdd911981c3b929, type: 3}
+  m_Name: LevelData_Introduction
+  m_EditorClassIdentifier: 
+  levelPrefab: {fileID: 8889469495092285403, guid: dbf8263855a9df34f9350f91e4d7b925, type: 3}
+  levelName: Introduction
+  stopperTicks: 2
+  inventory: []
