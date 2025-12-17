@@ -8,12 +8,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Beton
-    second: {fileID: 2100000, guid: e0673bced0692f3429f001b0f383487e, type: 2}
+    second: {fileID: 2100000, guid: 09b81a38aede9494aa2b3019ea7f2ee8, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Beton.002
-    second: {fileID: 2100000, guid: e0673bced0692f3429f001b0f383487e, type: 2}
+    second: {fileID: 2100000, guid: 09b81a38aede9494aa2b3019ea7f2ee8, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -28,7 +28,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Roof
-    second: {fileID: 2100000, guid: 4c8254932891abc4e924358678ca29a9, type: 2}
+    second: {fileID: 2100000, guid: 29b2cb75d32f11042babaa9f0dc12e67, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -38,12 +38,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Wall
-    second: {fileID: 2100000, guid: 13b7ded2b7ee34c47b686a7a11bcf150, type: 2}
+    second: {fileID: 2100000, guid: 72e671c7f356a074a8f988799b72e07b, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Wood
-    second: {fileID: 2100000, guid: 593cb61c3a8c2a242a72aba09ba22ec9, type: 2}
+    second: {fileID: 2100000, guid: 0192273292c480048b6547da2bf79b0f, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

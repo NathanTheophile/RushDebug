@@ -30,7 +30,7 @@ bool _SkipAnimation = false;
         private Material _Material;
         private Material _Emissive;
         [SerializeField] private int _StartDelay = 0;
-
+        private bool _IsSubscribedToTick = false;
         [SerializeField] private int _TickBetweenSpawns = 2;
         private int _CurrentWaitStatus = 2;
         [SerializeField] private int _AmountoOfCubes = 1;
@@ -69,8 +69,8 @@ bool _SkipAnimation = false;
             gameManager.onGameRetry += ResetSpawner;
             gameManager.onGameStart += StartGame;
             gameManager?.UpdateCubesAmountoComplete(_AmountoOfCubes);
-            timeManager.onTickFinished += Countdown;
-        }
+            SubscribeToTick();
+                    }
 
         void ResetSpawner()
         {
@@ -90,8 +90,7 @@ bool _SkipAnimation = false;
 
             _DeadCube = true;
             if (bone != null) bone.SetActive(true);
-                        timeManager.onTickFinished += Countdown;
-
+            SubscribeToTick();
         }
 
         void SpawnCube()
@@ -134,8 +133,11 @@ bool _SkipAnimation = false;
         private void StopSpawning()
         {
                         if (timeManager == null) return;
+            if (timeManager == null) return;
+            if (!_IsSubscribedToTick) return;
+
             timeManager.onTickFinished -= Countdown;
-        }
+            _IsSubscribedToTick = false;        }
 
         private void PlaySpawnTween(Transform pCubeTransform)
         {
@@ -176,6 +178,16 @@ bool _SkipAnimation = false;
 
             pCube.PlayValidationTween(() => Destroy(pCube.GameObject()));
         }
+
+                private void SubscribeToTick()
+        {
+            if (timeManager == null) return;
+            if (_IsSubscribedToTick) return;
+
+            timeManager.onTickFinished += Countdown;
+            _IsSubscribedToTick = true;
+        }
+
 
         private void OnDestroy()
         {

@@ -21,6 +21,9 @@ namespace Rush.Game
         private Transform _Self;
         private float _GridSize = 1f;
         private Action doAction;
+        private AudioClip _CubeArrivedClip;
+                [SerializeField] private string _CubeArrivedBus = "SFX";
+
         public enum ValidationTweenType
         {
             Normal,
@@ -285,8 +288,7 @@ namespace Rush.Game
             if (_CubeDeathClip == null || Manager_Audio.Instance == null)
                 return;
 
-            Vector3 playPosition = _Self != null ? _Self.position : transform.position;
-            Manager_Audio.Instance.PlayAtPosition(_CubeDeathClip, playPosition, pMixerGroup: _CubeDeathBus, pVolume: _CubeDeathVolume);
+            Manager_Audio.Instance.PlayOneShot(_CubeDeathClip, pMixerGroup: _CubeDeathBus, pVolume: _CubeDeathVolume);
         }
         private void SpawnCollisionUI()
         {
@@ -341,6 +343,9 @@ namespace Rush.Game
 
         public void PlayValidationTween(Action onComplete, ValidationTweenType? tweenTypeOverride = null)
         {
+            AudioClip lClipToPlay = Manager_Game.Instance?.GetNextCubeArrivedClip() ?? _CubeArrivedClip;
+            if (lClipToPlay != null && Manager_Audio.Instance != null)
+                Manager_Audio.Instance.PlayOneShot(lClipToPlay, pMixerGroup: _CubeArrivedBus);            
             Debug.Log("Joue anim");
                         GetComponent<Collider>().enabled = false;
 

@@ -9,7 +9,7 @@ public class AmbiantSounds : MonoBehaviour
     [SerializeField] float minLength, maxLength;
     [SerializeField] string Bus;
     [SerializeField, Range(0f, 1f)] float volume = 1f;
-
+    [SerializeField] float startDelay = 0f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -21,13 +21,15 @@ public class AmbiantSounds : MonoBehaviour
         if (audioClips == null || audioClips.Count == 0)
             yield break;
 
+        if (startDelay > 0f)
+            yield return new WaitForSeconds(startDelay);
+            
         while (true)
         {
             float lDelay = Mathf.Max(0f, Random.Range(minLength, maxLength));
             AudioClip lClip = audioClips[Random.Range(0, audioClips.Count)];
 
-            Vector3 lPosition = new Vector3(Random.Range(-50, 50), 5, Random.Range(-50, 50));
-            Manager_Audio.Instance.PlayAtPosition(lClip, pPosition:lPosition, pMixerGroup:Bus, pVolume:volume);
+            Manager_Audio.Instance.PlayOneShot(lClip, pMixerGroup:Bus, pVolume:volume);
             yield return new WaitForSeconds(lDelay);
         }
     }

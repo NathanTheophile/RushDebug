@@ -93,7 +93,7 @@ namespace Rush.UI
             
             if (string.Equals(_LevelData.levelName, "Stadium", StringComparison.OrdinalIgnoreCase))
             {
-                _PreviewCamera.SetRadius(75f);
+                _PreviewCamera.SetRadius(120f);
             }
             _PreviewCamera.canRotate = true;
             _PreviewTexture = new RenderTexture(_PreviewResolution.x, _PreviewResolution.y, 24, RenderTextureFormat.ARGB32)            {
@@ -160,6 +160,7 @@ namespace Rush.UI
 
         private void OnButtonClicked() {
             CleanupTexture();
+            Manager_Time.Instance.SetPauseStatus(true);
             Manager_Game.Instance.SpawnCurrentLevel(_LevelData);
                         Manager_Camera.Instance?.SetGameCameraActive();
             Manager_Ui.Instance.Switch(_PanelToShow, _RootCard, true, _DeactivateHiddenCardInstantly);        }

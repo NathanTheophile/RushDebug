@@ -45,6 +45,8 @@ namespace Rush.Game
         [Header("Audio")]
         [SerializeField] private AudioClip _WinClip;
         [SerializeField] private string _WinBus = "SFX";
+                [SerializeField] private string _MusicBus = "Music";
+        private Coroutine _WinSoundCoroutine;
         public event Action onGameRetry;
         [Header("Win Animation")]
         [SerializeField, Min(0f)] private float _LevelAscendHeight = 15f;
@@ -54,6 +56,8 @@ namespace Rush.Game
         private Tween _CurrentLevelWinTween;
                 [SerializeField] private List<AudioClip> _CubeArrivedClips = new();
         private int _CurrentCubeArrivedClipIndex;
+                private Coroutine _GameOverRoutine;
+        private Coroutine _GameWonRoutine;
         #region _____________________________/ LEVEL DATA
 
         public SO_LevelData CurrentLevel { get; private set; }
@@ -85,8 +89,10 @@ namespace Rush.Game
             _CubesArrived++;
             if (_CubesArrived >= _CubesToComplete && !_HasTriggeredGameWon)
             {
-                StartCoroutine(GameWonAfterDelay());
-            }
+                if (_GameWonRoutine != null)
+                    StopCoroutine(_GameWonRoutine);
+
+                _GameWonRoutine = StartCoroutine(GameWonAfterDelay());            }
         }
         
         public void GameOver(Cube pCube)
@@ -94,8 +100,10 @@ namespace Rush.Game
             if (_HasTriggeredGameOver)
                 return;
 
-            StartCoroutine(HandleGameOverSequence(pCube));
-        }
+            if (_GameOverRoutine != null)
+                StopCoroutine(_GameOverRoutine);
+
+            _GameOverRoutine = StartCoroutine(HandleGameOverSequence(pCube));        }
 
         private IEnumerator HandleGameOverSequence(Cube pCube)
         {
@@ -106,25 +114,28 @@ namespace Rush.Game
                 yield return lDeathTween.WaitForCompletion();
 
             Manager_Time.Instance.SetPauseStatus(true);
+            _GameOverRoutine = null;
         }
         
         private System.Collections.IEnumerator GameWonAfterDelay()
         {
             _HasTriggeredGameWon = true;
-            TilePlacer.Instance.ResetPlacedTiles();
+            PlayWinSound();
             InvokeGameWonSequenceStarted();
             if (_LevelAscendDelayInSeconds > 0f)
             {
                 yield return new WaitForSeconds(_LevelAscendDelayInSeconds);
             }
+            TilePlacer.Instance.ResetPlacedTiles();
             PlayLevelAscendTween();
-            PlayWinSound();
             if (_GameWonDelayInSeconds > 0f)
             {
                 yield return new WaitForSeconds(_GameWonDelayInSeconds);
             }
             onGameWon?.Invoke();
             Manager_Time.Instance.SetPauseStatus(true);
+                        _GameOverRoutine = null;
+
         }
         #region _____________________________/ LEVEL DATA
 
@@ -172,7 +183,9 @@ namespace Rush.Game
             _CubesToComplete = 0;
             _CubesArrived = 0;
             _HasTriggeredGameOver = false;
+                        _HasTriggeredGameWon = false;
                         _CurrentCubeArrivedClipIndex = 0;
+                                    StopRunningEndgameCoroutines();
 
             _CurrentLevelWinTween?.Kill();
             _CurrentLevelWinTween = null;
@@ -188,9 +201,49 @@ namespace Rush.Game
             if (_WinClip == null || Manager_Audio.Instance == null)
                 return;
 
-            Manager_Audio.Instance.PlayOneShot(_WinClip, pMixerGroup: _WinBus);
+            if (_WinSoundCoroutine != null)
+                StopCoroutine(_WinSoundCoroutine);
+
+            _WinSoundCoroutine = StartCoroutine(PlayWinSoundRoutine());
         }
 
+        private IEnumerator PlayWinSoundRoutine()
+        {
+            bool lShouldAdjustMusic = Manager_Audio.Instance != null && !string.IsNullOrWhiteSpace(_MusicBus);
+            float lOriginalMusicVolume = 1f;
+
+            if (lShouldAdjustMusic)
+            {
+                lOriginalMusicVolume = Manager_Audio.Instance.GetGroupVolume(_MusicBus, lOriginalMusicVolume);
+                Manager_Audio.Instance.SetGroupVolume(_MusicBus, Mathf.Clamp01(lOriginalMusicVolume * 0.5f));
+            }
+
+            AudioSource lSource = Manager_Audio.Instance.PlayOneShot(_WinClip, pMixerGroup: _WinBus);
+            float lClipDuration = _WinClip.length;
+            if (lSource != null && lSource.clip != null && lSource.pitch > 0f)
+                lClipDuration = lSource.clip.length / lSource.pitch;
+
+            yield return new WaitForSecondsRealtime(lClipDuration);
+
+            if (lShouldAdjustMusic && Manager_Audio.Instance != null)
+                Manager_Audio.Instance.SetGroupVolume(_MusicBus, lOriginalMusicVolume);
+
+            _WinSoundCoroutine = null;
+        }
+        private void StopRunningEndgameCoroutines()
+        {
+            if (_GameOverRoutine != null)
+            {
+                StopCoroutine(_GameOverRoutine);
+                _GameOverRoutine = null;
+            }
+
+            if (_GameWonRoutine != null)
+            {
+                StopCoroutine(_GameWonRoutine);
+                _GameWonRoutine = null;
+            }
+        }
         private void InvokeGameWonSequenceStarted()
         {
             try

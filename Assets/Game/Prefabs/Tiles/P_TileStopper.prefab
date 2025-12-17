@@ -123,6 +123,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1519708505807681995}
     m_Modifications:
     - target: {fileID: -8880698536992543636, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
+      propertyPath: m_Range
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8880698536992543636, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
@@ -171,12 +175,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8355579101202053003, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
+      propertyPath: m_Range
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8355579101202053003, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8355579101202053003, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_CullingMask.m_Bits
       value: 1975
+      objectReference: {fileID: 0}
+    - target: {fileID: -8246912899171996075, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
+      propertyPath: m_Range
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8246912899171996075, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_Lightmapping
@@ -191,6 +203,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: b9e72ae1b40cfbe4fb48f969b74c8944, type: 2}
     - target: {fileID: -7550440626349836391, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
+      propertyPath: m_Range
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -7550440626349836391, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
@@ -199,6 +215,10 @@ PrefabInstance:
       value: 1975
       objectReference: {fileID: 0}
     - target: {fileID: -6954071062223143363, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
+      propertyPath: m_Range
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -6954071062223143363, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
@@ -207,12 +227,20 @@ PrefabInstance:
       value: 1975
       objectReference: {fileID: 0}
     - target: {fileID: -1294892128559850198, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
+      propertyPath: m_Range
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -1294892128559850198, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -1294892128559850198, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_CullingMask.m_Bits
       value: 1975
+      objectReference: {fileID: 0}
+    - target: {fileID: -206254283356321021, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
+      propertyPath: m_Range
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -206254283356321021, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_Lightmapping
@@ -231,6 +259,10 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4073680261343121730, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
+      propertyPath: m_Range
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073680261343121730, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
@@ -239,6 +271,10 @@ PrefabInstance:
       value: 1975
       objectReference: {fileID: 0}
     - target: {fileID: 5701795859802828481, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
+      propertyPath: m_Range
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5701795859802828481, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
@@ -247,6 +283,10 @@ PrefabInstance:
       value: 1975
       objectReference: {fileID: 0}
     - target: {fileID: 5958438921693756439, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
+      propertyPath: m_Range
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5958438921693756439, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
@@ -255,6 +295,10 @@ PrefabInstance:
       value: 1975
       objectReference: {fileID: 0}
     - target: {fileID: 6800325588945520740, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
+      propertyPath: m_Range
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6800325588945520740, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
@@ -263,12 +307,20 @@ PrefabInstance:
       value: 1975
       objectReference: {fileID: 0}
     - target: {fileID: 8555210245918711917, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
+      propertyPath: m_Range
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8555210245918711917, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_Lightmapping
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8555210245918711917, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_CullingMask.m_Bits
       value: 1975
+      objectReference: {fileID: 0}
+    - target: {fileID: 8912049515002365231, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
+      propertyPath: m_Range
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8912049515002365231, guid: 36c978d7587193840a1dc622f75f166b, type: 3}
       propertyPath: m_Lightmapping

@@ -32,7 +32,7 @@ namespace Rush.Game.Core
 
         #region _____________________________/ VALUES
         [SerializeField] private Transform _MainCanvas;
-        [SerializeField] private Transform _WinScreen, _LoseScreen;
+        [SerializeField] private Transform _WinScreen, _LoseScreen, MainMenu;
         [SerializeField] private List<Transform> _UiCards = new();
         [Header("Cards")]
         [SerializeField] private Transform _SetupPhaseCard;
@@ -54,7 +54,6 @@ namespace Rush.Game.Core
         private void Awake()
         {
             CheckForInstance();
-
             if (_SetupPhaseCard == null)
                 _SetupPhaseCard = _UiCards.Find(pCard => pCard != null && pCard.name.Contains("SetupPhase"));
         }
@@ -67,6 +66,7 @@ namespace Rush.Game.Core
         {
             Manager_Game.Instance.onGameOver += SwitchToLose;
             Manager_Game.Instance.onGameWon += SwitchToWin;
+            Show(MainMenu);
         }
 
         #endregion
@@ -81,6 +81,16 @@ namespace Rush.Game.Core
                     _UiCards.Add(lCard);
 
                 return lCard;
+            }
+
+                        Transform lExistingInstance = FindExistingCardInstance(pCard);
+            if (lExistingInstance != null)
+            {
+                _UiCardInstances[pCard] = lExistingInstance;
+                if (!_UiCards.Contains(lExistingInstance))
+                    _UiCards.Add(lExistingInstance);
+
+                return lExistingInstance;
             }
 
             // If the card is already part of the scene (not a prefab asset), just register it.
@@ -100,6 +110,28 @@ namespace Rush.Game.Core
             return lCard;
         }
 
+
+        private Transform FindExistingCardInstance(Transform pCard)
+        {
+            if (_MainCanvas == null || pCard == null)
+                return null;
+
+            foreach (Transform lChild in _MainCanvas.GetComponentsInChildren<Transform>(true))
+            {
+                if (lChild == null || lChild == pCard)
+                    continue;
+
+                if (_UiCardInstances.ContainsValue(lChild))
+                    continue;
+
+                if (lChild.name == pCard.name)
+                    return lChild;
+            }
+
+            return null;
+        }
+
+        
         public void Show(Transform pCard, bool pFadeBlack = false)
         {
             if (pCard == null) return;

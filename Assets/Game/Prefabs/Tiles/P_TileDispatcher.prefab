@@ -83,7 +83,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -216,6 +216,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileVariant: 3
+  _SwitchTarget: {fileID: 9081022634957694818}
+  _SwitchTweenDuration: 0.25
 --- !u!1001 &8758653020793864329
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -271,12 +273,43 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: -8700617353114198275, guid: dd02bc0e02e80db4dbd355082134d66b, type: 3}
+    - {fileID: 4974984522306558807, guid: dd02bc0e02e80db4dbd355082134d66b, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: dd02bc0e02e80db4dbd355082134d66b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6553744935245190061}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dd02bc0e02e80db4dbd355082134d66b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1270687153390913318}
   m_SourcePrefab: {fileID: 100100000, guid: dd02bc0e02e80db4dbd355082134d66b, type: 3}
+--- !u!1 &8452576271092628952 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: dd02bc0e02e80db4dbd355082134d66b, type: 3}
+  m_PrefabInstance: {fileID: 8758653020793864329}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1270687153390913318
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8452576271092628952}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 346bd4764d8bb8e4681f4c6191f2f9c1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &9081022634957694818 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: dd02bc0e02e80db4dbd355082134d66b, type: 3}

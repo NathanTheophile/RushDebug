@@ -124,7 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _TargetPosition: {x: 0, y: 0, z: 0}
-  _Radius: 60
+  _Radius: 75
   _Colatitude: 30
   _RotateSpeed: 45
   canRotate: 0
