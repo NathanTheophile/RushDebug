@@ -212,6 +212,7 @@ MonoBehaviour:
   _CameraPrefab: {fileID: 8527800346811119959, guid: 9b9841144ce7af749846feea7bd1248a, type: 3}
   thisLevelData: {fileID: 0}
   _PreviewResolution: {x: 512, y: 512}
+  _DeactivateHiddenCardInstantly: 1
 --- !u!114 &4053507832295043765
 MonoBehaviour:
   m_ObjectHideFlags: 0

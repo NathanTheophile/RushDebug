@@ -162,8 +162,9 @@ namespace Rush.UI
             CleanupTexture();
             Manager_Time.Instance.SetPauseStatus(true);
             Manager_Game.Instance.SpawnCurrentLevel(_LevelData);
-                        Manager_Camera.Instance?.SetGameCameraActive();
-            Manager_Ui.Instance.Switch(_PanelToShow, _RootCard, true, _DeactivateHiddenCardInstantly);        }
+            Manager_Camera.Instance?.SetGameCameraActive();
+            if (_LevelData.levelName == "Introduction" || _LevelData.levelName == "Introduction Arrow")Manager_Ui.Instance.Hide(_RootCard, false, _DeactivateHiddenCardInstantly);
+            else Manager_Ui.Instance.Switch(_PanelToShow, _RootCard, false, _DeactivateHiddenCardInstantly);        }
 
         #endregion
     }

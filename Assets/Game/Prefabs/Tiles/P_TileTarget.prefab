@@ -76,6 +76,10 @@ PrefabInstance:
       propertyPath: m_Intensity
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5958438921693756439, guid: a0ad0ca06eb36bd41b6e006e239aefe8, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -209,8 +213,6 @@ MonoBehaviour:
   _Light: {fileID: 9161864904039611475}
   _LightPulseDuration: 4
   _LightPulseIntensity: {x: 0.35, y: 2}
-  _CubeArrivedClip: {fileID: 8300000, guid: a1224f6bd92b9dc40bf5a7548263d943, type: 3}
-  _CubeArrivedBus: Effects
   fleurs: {fileID: 8630424561563939649}
   sol: {fileID: 458246991578247470}
   fleur: {fileID: 9189179990250554683}

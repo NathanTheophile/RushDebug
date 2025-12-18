@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: LevelCollection_BaseGame
   m_EditorClassIdentifier: 
   _LevelDatas:
+  - {fileID: 11400000, guid: 320fc5b4d4648754b8f225a55a21b0ff, type: 2}
+  - {fileID: 11400000, guid: 1d1a57e4d85fdd947aad6647e10fa699, type: 2}
   - {fileID: 11400000, guid: 6dd09d99572ea774aabf2abe310b915f, type: 2}
   - {fileID: 11400000, guid: 58da55779358f71428d4af6bc2ee9ed3, type: 2}
   - {fileID: 11400000, guid: fb721d9cf99199c43beab09da3411727, type: 2}

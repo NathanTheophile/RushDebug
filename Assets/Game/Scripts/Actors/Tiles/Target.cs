@@ -5,6 +5,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using Rush.Game.Core;
 using Unity.VisualScripting;
@@ -29,7 +30,12 @@ namespace Rush.Game
         [SerializeField] GameObject fleurs;
                 [SerializeField] GameObject sol;
         [SerializeField] GameObject fleur;
+        [SerializeField] private int amountOfCubes = 1;
+        [SerializeField] private List<Transform> ElementsToActivate = new();
 
+                private int _NumberToActivate;
+
+        private Flower[] _FlowerList;
         private Material _Material;
         private Material _Emissive;
         private Manager_Time     timeManager;
@@ -78,6 +84,8 @@ namespace Rush.Game
             timeManager = Manager_Time.Instance;
             tileManager = Manager_Tile.Instance;
             gameManager = Manager_Game.Instance;
+
+            _FlowerList = FindObjectsByType<Flower>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         }
 
         private void StartLightPulse()
@@ -111,8 +119,26 @@ namespace Rush.Game
             pCube.onTileDetected -= tileManager.TryGetTile;
                         pCube.onCubeDeath -= gameManager.GameOver;
                         gameManager.UpdateCubeArrived();
-
+            ActivateElements();
             pCube.PlayValidationTween(() => Destroy(pCube.GameObject()));
+        }
+
+                private void ActivateElements()
+        {
+            if (_NumberToActivate <= 0 || ElementsToActivate.Count == 0)
+                return;
+
+            int lActivationCount = Mathf.Min(_NumberToActivate, ElementsToActivate.Count);
+            for (int i = 0; i < lActivationCount; i++)
+            {
+                Transform lElement = ElementsToActivate[i];
+                if (lElement != null)
+                {
+                    lElement.gameObject.SetActive(true);
+                }
+            }
+
+            ElementsToActivate.RemoveRange(0, lActivationCount);
         }
     }
 }

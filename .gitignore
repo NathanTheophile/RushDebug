@@ -27,7 +27,7 @@ ExportedObj/
 *.pdb
 *.opendb
 /.utmp/*
- 
+
 # Unity3D generated meta files
 *.pidb.meta
 *.pdb.meta
@@ -40,8 +40,7 @@ sysinfo.txt
 *.unitypackage
  
 # FMOD
-Assets/FMODStudioCache.asset
-Assets/FMODStudioCache.asset.meta
+# Large audio assets stored externally
 Assets/StreamingAssets/*.bank
 fmod.log
 fmod_editor.log
@@ -66,5 +65,6 @@ Assets/Plugins/Android/FirebaseApp.androidlib/res/values/google-services.xml
 Assets/Plugins/Android/FirebaseApp.androidlib/res.meta
 Assets/Plugins/Android/FirebaseApp.androidlib/res/values.meta
 Assets/Plugins/Android/FirebaseApp.androidlib/res/values/google-services.xml.meta
+Assets/RedBlueGames/
 *.keystore
 *.unitypackage.meta

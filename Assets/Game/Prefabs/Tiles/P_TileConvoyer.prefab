@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_Intensity
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: -6722085885383957590, guid: 027b8997c2adfab46af76807db8ee18a, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -4275816517197415630, guid: 027b8997c2adfab46af76807db8ee18a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 143.79312
