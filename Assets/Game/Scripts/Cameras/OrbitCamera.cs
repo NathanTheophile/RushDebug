@@ -181,11 +181,16 @@ namespace Rush.Game
                 else if (lTouch.phase == TouchPhase.Moved && _IsDragging)
                 {
                     Vector2 lDelta = lTouch.deltaPosition;
-                    float lDeltaTheta = lDelta.x * _RotationSensitivity * Mathf.Deg2Rad;
-                    _Theta += lDeltaTheta;
+                    bool lIsHorizontalDominant = Mathf.Abs(lDelta.x) >= Mathf.Abs(lDelta.y);
 
-                    if (Time.deltaTime > Mathf.Epsilon)
-                        _RotationVelocity = lDeltaTheta / Time.deltaTime;
+                    if (lIsHorizontalDominant && !Mathf.Approximately(lDelta.x, 0f))
+                    {
+                        float lDeltaTheta = lDelta.x * _RotationSensitivity * Mathf.Deg2Rad;
+                        _Theta += lDeltaTheta;
+
+                        if (Time.deltaTime > Mathf.Epsilon)
+                            _RotationVelocity = lDeltaTheta / Time.deltaTime;
+                    }
                 }
                 else if (lTouch.phase == TouchPhase.Ended || lTouch.phase == TouchPhase.Canceled)
                 {
