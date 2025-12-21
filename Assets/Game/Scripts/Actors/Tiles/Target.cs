@@ -110,9 +110,8 @@ namespace Rush.Game
                     ElementsToActivate.Add(lFlower.transform);
                 }
             }
-            Debug.Log("Elements to activate : " + ElementsToActivate.Count);
 
-                        foreach (Transform lElement in ElementsToActivate)
+            foreach (Transform lElement in ElementsToActivate)
             {
                 if (lElement == null)
                     continue;
@@ -168,6 +167,7 @@ namespace Rush.Game
 
         private void ActivateElements()
         {
+            Debug.Log("Elements : " + ElementsToActivate.Count);
             if (_NumberToActivate <= 0 || ElementsToActivate.Count == 0)
                 return;
 

@@ -12,6 +12,7 @@ public class UI_BtnAnimation : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     [Header("Scale tween")]
     [SerializeField] private float _HoverScale = 1.15f;
+    [SerializeField] private float _OriginalScale = 1f;
     [SerializeField] private float _ScaleDuration = 0.15f;
     [SerializeField] private Ease _ScaleEase = Ease.OutQuad;
 
@@ -117,7 +118,7 @@ public class UI_BtnAnimation : MonoBehaviour, IPointerEnterHandler, IPointerExit
         _rightLogoTween.Kill();
 
         _scaleTween.Kill();
-        _scaleTween = transform.DOScale(1f, _ScaleDuration).SetEase(_ScaleEase);
+        _scaleTween = transform.DOScale(_OriginalScale, _ScaleDuration).SetEase(_ScaleEase);
 
         if (_LeftHover != null)
         {
