@@ -34,6 +34,8 @@ namespace Rush.Game
         [SerializeField] private float _ScrollZoomSensitivity = 0.2f; // Units per scroll step
         [SerializeField] private float _PinchZoomSensitivity = 0.02f; // Units per pixel
         [SerializeField] private float _InertiaDamping = 4f;
+
+        [SerializeField] private float _AutoRotateSpeed = 45f;
         #endregion
 
         #region ___________________________/ STATE
@@ -46,8 +48,8 @@ namespace Rush.Game
         private bool       _HasZoomInput;
         private Vector2    _LastPointerPosition;
         private float      _PreviousPinchDistance;
+                private bool       _IsAutoRotating;
 
-        
         private static readonly List<RaycastResult> _RaycastResults = new();
         #endregion
 
@@ -88,6 +90,7 @@ namespace Rush.Game
         void Update()
         {
             HandleInput();
+            ApplyAutoRotation(Time.deltaTime);
             ApplyInertia(Time.deltaTime);
             UpdateCameraPosition();
         }
@@ -96,6 +99,12 @@ namespace Rush.Game
 
         void HandleInput()
         {
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                _IsAutoRotating = !_IsAutoRotating;
+                _RotationVelocity = 0f;
+            }
+
             _HasZoomInput = false;
 
             if (Input.touchCount > 0)
@@ -128,6 +137,7 @@ namespace Rush.Game
                 _IsDragging = true;
                 _LastPointerPosition = Input.mousePosition;
                 _RotationVelocity = 0f;
+                _IsAutoRotating = false;
             }
             else if (Input.GetMouseButtonUp(0))
             {
@@ -166,6 +176,7 @@ namespace Rush.Game
                     _IsDragging = true;
                     _LastPointerPosition = lTouch.position;
                     _RotationVelocity = 0f;
+                    _IsAutoRotating = false;
                 }
                 else if (lTouch.phase == TouchPhase.Moved && _IsDragging)
                 {
@@ -213,7 +224,7 @@ namespace Rush.Game
             if (Mathf.Approximately(pDeltaTime, 0f))
                 return;
 
-            if (!_IsDragging && Mathf.Abs(_RotationVelocity) > 0.0001f)
+            if (!_IsAutoRotating && !_IsDragging && Mathf.Abs(_RotationVelocity) > 0.0001f)
             {
                 _Theta += _RotationVelocity * pDeltaTime;
                 float lDampingFactor = Mathf.Exp(-_InertiaDamping * pDeltaTime);
@@ -297,7 +308,15 @@ namespace Rush.Game
             return false;
         }
 
+        void ApplyAutoRotation(float pDeltaTime)
+        {
+            if (!_IsAutoRotating || Mathf.Approximately(pDeltaTime, 0f))
+                return;
 
+            float lDeltaTheta = _AutoRotateSpeed * Mathf.Deg2Rad * pDeltaTime;
+            _Theta += lDeltaTheta;
+            _RotationVelocity = lDeltaTheta / pDeltaTime;
+        }
 
         void UpdateCameraPosition()
         {

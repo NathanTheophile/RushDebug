@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using Rush.Game.Core;
 using Unity.VisualScripting;
@@ -33,8 +34,9 @@ namespace Rush.Game
         [SerializeField] private int amountOfCubes = 1;
         [SerializeField] private List<Transform> ElementsToActivate = new();
 
-                private int _NumberToActivate;
-
+        [SerializeField, Min(1)] private int _NumberToActivate = 1;
+                [SerializeField] private int _SpawnerAmount = 1;
+        [SerializeField] private int _SpawnerIndex = 0;
         private Flower[] _FlowerList;
         private Material _Material;
         private Material _Emissive;
@@ -86,6 +88,47 @@ namespace Rush.Game
             gameManager = Manager_Game.Instance;
 
             _FlowerList = FindObjectsByType<Flower>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            PopulateElementsToActivate();
+        }
+
+        private void PopulateElementsToActivate()
+        {
+            ElementsToActivate.Clear();
+            if (_FlowerList == null || _FlowerList.Length == 0)
+                return;
+
+            if (_SpawnerAmount <= 0)
+                return;
+
+            int lStartIndex = Mathf.Max(0, _SpawnerIndex);
+            for (int i = lStartIndex; i < _FlowerList.Length; i += _SpawnerAmount)
+            {
+                Flower lFlower = _FlowerList[i];
+                if (lFlower != null)
+                {
+                    ElementsToActivate.Add(lFlower.transform);
+                }
+            }
+            Debug.Log("Elements to activate : " + ElementsToActivate.Count);
+
+                        foreach (Transform lElement in ElementsToActivate)
+            {
+                if (lElement == null)
+                    continue;
+
+                Renderer lRenderer = lElement.GetComponent<Renderer>();
+                if (lRenderer == null)
+                    continue;
+
+                Material[] lMaterials = lRenderer.materials;
+                if (lMaterials.Length < 2)
+                    continue;
+
+                lMaterials[0] = _Material;
+                lMaterials[1] = _Emissive;
+                lRenderer.materials = lMaterials;
+            }
         }
 
         private void StartLightPulse()
@@ -123,7 +166,7 @@ namespace Rush.Game
             pCube.PlayValidationTween(() => Destroy(pCube.GameObject()));
         }
 
-                private void ActivateElements()
+        private void ActivateElements()
         {
             if (_NumberToActivate <= 0 || ElementsToActivate.Count == 0)
                 return;

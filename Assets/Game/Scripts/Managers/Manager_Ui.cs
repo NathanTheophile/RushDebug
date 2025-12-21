@@ -48,6 +48,10 @@ namespace Rush.Game.Core
 
         [SerializeField] Manager_Game lManager;
 
+                [Header("Inputs")]
+        [SerializeField] private KeyCode _ToggleCurrentCardKey = KeyCode.O;
+        private bool _IsCurrentCardHidden;
+
         #endregion
 
         #region _____________________________| INIT
@@ -69,6 +73,10 @@ namespace Rush.Game.Core
             Show(MainMenu);
         }
 
+        void Update()
+        {
+            HandleCurrentCardToggleInput();
+        }
         #endregion
 
         public Transform AddCardToScene(Transform pCard)
@@ -160,7 +168,7 @@ namespace Rush.Game.Core
             if (IsSetupPhaseCard(pCard))
                 ResetGameSpeed();
 
-            _CurrentCard = pCard;
+            SetCurrentCard(pCard);
 
             if (pFadeBlack)
             {
@@ -273,7 +281,10 @@ namespace Rush.Game.Core
             }
 
             if (_CurrentCard == lCard)
+            {
                 _CurrentCard = null;
+                _IsCurrentCardHidden = false;
+            }
         }
 
         public void Switch(Transform pCardToShow, Transform pCardToHide, bool pFadeBlack = false, bool pDeactivateHiddenCardInstantly = false)
@@ -496,5 +507,56 @@ namespace Rush.Game.Core
                 yield return null;
         }
 
+                private void HandleCurrentCardToggleInput()
+        {
+            if (_ToggleCurrentCardKey == KeyCode.None)
+                return;
+
+            if (!Input.GetKeyDown(_ToggleCurrentCardKey))
+                return;
+
+            ToggleCurrentCardVisibility();
+        }
+
+        private void ToggleCurrentCardVisibility()
+        {
+            if (_CurrentCard == null)
+                return;
+
+            if (_IsCurrentCardHidden)
+                ShowCurrentCardImmediate();
+            else
+                HideCurrentCardImmediate();
+        }
+
+        private void HideCurrentCardImmediate()
+        {
+            if (_CurrentCard == null)
+                return;
+
+            CancelFade(_CurrentCard, false);
+            _CurrentCard.gameObject.SetActive(false);
+            _IsCurrentCardHidden = true;
+        }
+
+        private void ShowCurrentCardImmediate()
+        {
+            if (_CurrentCard == null)
+                return;
+
+            CancelFade(_CurrentCard, false);
+            _CurrentCard.gameObject.SetActive(true);
+            CanvasGroup lGroup = EnsureCanvasGroup(_CurrentCard);
+            lGroup.alpha = 1f;
+            _IsCurrentCardHidden = false;
+        }
+
+        private void SetCurrentCard(Transform pCard)
+        {
+            _CurrentCard = pCard;
+            _IsCurrentCardHidden = false;
+        }
+
     }
+
 }

@@ -19,6 +19,7 @@ namespace Rush.UI
         [SerializeField] private SO_LevelCollection _LevelCollection;
         [SerializeField] private UI_Btn_Level _LevelItemPrefab;
         [SerializeField] private GridLayoutGroup _GridLayoutGroup;
+        [SerializeField] private Transform _Container;
         #endregion
 
         #region _____________________________/ PREVIEW
@@ -86,7 +87,7 @@ namespace Rush.UI
                 Vector3 lSpawnPosition = _PreviewOrigin + new Vector3(_PreviewOffset * i, 0f, 0f);
 
                 UI_Btn_Level levelItem = Instantiate(_LevelItemPrefab, transform, false);
-                levelItem.Initialize(lSpawnPosition, lLevelCollection[i], transform.parent);
+                levelItem.Initialize(lSpawnPosition, lLevelCollection[i], _Container);
 
                 _SpawnedLevelInstances.Add(levelItem);
             }

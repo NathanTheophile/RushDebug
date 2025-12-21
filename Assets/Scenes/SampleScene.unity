@@ -162,7 +162,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -471,6 +471,7 @@ MonoBehaviour:
   _FadeDuration: 0.2
   _FullBlackFade: {fileID: 1549099588}
   lManager: {fileID: 293031529}
+  _ToggleCurrentCardKey: 111
 --- !u!114 &293031531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1047,6 +1048,10 @@ PrefabInstance:
     - target: {fileID: 2119934401357819613, guid: 0da9d297a11591a4389d7a85b0792036, type: 3}
       propertyPath: field of view
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5318056061948014317, guid: 0da9d297a11591a4389d7a85b0792036, type: 3}
+      propertyPath: m_Antialiasing
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5318056061948014317, guid: 0da9d297a11591a4389d7a85b0792036, type: 3}
       propertyPath: m_Cameras.Array.size

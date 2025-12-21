@@ -215,7 +215,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1056909798249072718, guid: ca697153cb5c1274b99fd7b42ad91350, type: 3}
       propertyPath: m_Value
-      value: 1.5
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 5194461618664309084, guid: ca697153cb5c1274b99fd7b42ad91350, type: 3}
       propertyPath: m_AnchorMax.x
@@ -362,6 +362,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _GameSpeedSlider: {fileID: 4042784937242500803}
+  _GameSpeedValueText: {fileID: 0}
 --- !u!224 &9185883169129137748 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5317324772425142489, guid: ca697153cb5c1274b99fd7b42ad91350, type: 3}
