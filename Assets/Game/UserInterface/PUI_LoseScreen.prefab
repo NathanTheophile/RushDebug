@@ -662,7 +662,7 @@ PrefabInstance:
       objectReference: {fileID: 5411068302536572238, guid: 7256607c2b184fe4b94d3e95929af0e6, type: 3}
     - target: {fileID: 3260880925716991860, guid: 90f6dcf512709cf429798acfdbcc3ff8, type: 3}
       propertyPath: _LevelUnloader
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8012789688113270578, guid: 90f6dcf512709cf429798acfdbcc3ff8, type: 3}
       propertyPath: m_text

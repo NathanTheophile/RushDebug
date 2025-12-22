@@ -76,7 +76,12 @@ public class UI_Btn_Navigation : MonoBehaviour
 
     private void Hide()     => Manager_Ui.Instance.Hide(_CardToHide, _FadeBlack, _DeactivateHiddenCardInstantly);
 
-    private void Switch()   => Manager_Ui.Instance.Switch(_CardToShow, _CardToHide, _FadeBlack, _DeactivateHiddenCardInstantly);
+    private void Switch()   
+    { 
+        if (_Retry && (Manager_Game.Instance.CurrentLevel.levelName == "Introduction" || Manager_Game.Instance.CurrentLevel.levelName == "Introduction Arrow")) Manager_Ui.Instance.Hide(_CardToHide, _FadeBlack, _DeactivateHiddenCardInstantly);
+        else Manager_Ui.Instance.Switch(_CardToShow, _CardToHide, _FadeBlack, _DeactivateHiddenCardInstantly); 
+        
+    }
 
     void QuitGame()         => Application.Quit();
 
@@ -90,12 +95,13 @@ public class UI_Btn_Navigation : MonoBehaviour
 
     private void ExecuteAdditionalActions()
     {
+        if (_Retry && _LevelUnloader) UnloadLevel(true);
         if (_Retry) Retry();
         if (_LevelUnloader) UnloadLevel();
         if (_StartGame) Play();
     }
 
-    void UnloadLevel()      => Manager_Game.Instance.UnloadCurrentLevel();
+    void UnloadLevel(bool pReload = false)      => Manager_Game.Instance.UnloadCurrentLevel(pReload);
 
     void Play() => Manager_Game.Instance.StartGame();
 

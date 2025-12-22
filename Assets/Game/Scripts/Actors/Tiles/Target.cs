@@ -31,8 +31,8 @@ namespace Rush.Game
         [SerializeField] GameObject fleurs;
                 [SerializeField] GameObject sol;
         [SerializeField] GameObject fleur;
-        [SerializeField] private int amountOfCubes = 1;
-        [SerializeField] private List<Transform> ElementsToActivate = new();
+        [SerializeField] public int amountOfCubes = 1;
+        [SerializeField] public List<Transform> ElementsToActivate;
 
         [SerializeField, Min(1)] private int _NumberToActivate = 1;
                 [SerializeField] private int _SpawnerAmount = 1;
@@ -89,11 +89,12 @@ namespace Rush.Game
 
             _FlowerList = FindObjectsByType<Flower>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
-            PopulateElementsToActivate();
+            //PopulateElementsToActivate();
         }
 
-        private void PopulateElementsToActivate()
+        public void PopulateElementsToActivate()
         {
+            /*
             ElementsToActivate.Clear();
             if (_FlowerList == null || _FlowerList.Length == 0)
                 return;
@@ -110,6 +111,7 @@ namespace Rush.Game
                     ElementsToActivate.Add(lFlower.transform);
                 }
             }
+            */
 
             foreach (Transform lElement in ElementsToActivate)
             {
@@ -128,6 +130,9 @@ namespace Rush.Game
                 lMaterials[1] = _Emissive;
                 lRenderer.materials = lMaterials;
             }
+
+            _NumberToActivate = ElementsToActivate.Count / amountOfCubes;
+
         }
 
         private void StartLightPulse()
@@ -167,12 +172,7 @@ namespace Rush.Game
 
         private void ActivateElements()
         {
-            Debug.Log("Elements : " + ElementsToActivate.Count);
-            if (_NumberToActivate <= 0 || ElementsToActivate.Count == 0)
-                return;
-
-            int lActivationCount = Mathf.Min(_NumberToActivate, ElementsToActivate.Count);
-            for (int i = 0; i < lActivationCount; i++)
+            for (int i = 0; i < _NumberToActivate; i++)
             {
                 Transform lElement = ElementsToActivate[i];
                 if (lElement != null)
@@ -181,7 +181,7 @@ namespace Rush.Game
                 }
             }
 
-            ElementsToActivate.RemoveRange(0, lActivationCount);
+            ElementsToActivate.RemoveRange(0, _NumberToActivate);
         }
     }
 }

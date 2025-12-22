@@ -167,6 +167,7 @@ namespace Rush.Game
                         _CurrentLevelWinTween?.Kill();
             _CurrentLevelWinTween = null;
             Destroy(_CurrentLevelPrefab);
+            if (pReload) SpawnCurrentLevel(CurrentLevel);
         }
         public AudioClip GetNextCubeArrivedClip()
         {
